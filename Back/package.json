@@ -1,0 +1,51 @@
+{
+  "name": "restful-booker-cypress-bdd",
+  "version": "1.0.0",
+  "description": "Testes automatizados de API (Restful Booker) com Cypress, BDD (Cucumber) e Page Objects",
+  "private": true,
+  "scripts": {
+    "cy:open": "cypress open",
+    "test": "cypress run --expose tags=\"not @bug\"",
+    "test:all": "cypress run",
+    "test:smoke": "cypress run --expose tags=@smoke",
+    "test:regression": "cypress run --expose tags=@regression",
+    "test:negative": "cypress run --expose tags=\"@negative and not @bug\"",
+    "test:contract": "cypress run --expose tags=@contract",
+    "test:bugs": "cypress run --expose tags=@bug",
+    "test:auth": "cypress run --expose tags=@auth",
+    "test:get": "cypress run --expose tags=@get",
+    "test:post": "cypress run --expose tags=@post",
+    "test:put": "cypress run --expose tags=@put",
+    "test:delete": "cypress run --expose tags=@delete",
+    "report": "node scripts/generate-report.js",
+    "report:open": "open reports/html/index.html",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": "cypress/e2e/step_definitions/**/*.js",
+    "filterSpecs": true,
+    "omitFiltered": true,
+    "html": {
+      "enabled": true,
+      "output": "reports/cucumber-report.html"
+    },
+    "json": {
+      "enabled": true,
+      "output": "reports/json/cucumber-report.json"
+    }
+  },
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^28.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
+    "@eslint/js": "^10.0.1",
+    "ajv": "^8.20.0",
+    "cypress": "^16.1.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.12.0",
+    "eslint-plugin-cypress": "^7.0.2",
+    "globals": "^17.13.0",
+    "multiple-cucumber-html-reporter": "^4.4.2",
+    "prettier": "^3.9.9"
+  }
+}

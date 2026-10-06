@@ -1,0 +1,88 @@
+name: API Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Execução diária (06:00 BRT) para detectar mudanças na API pública.
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: "Expressão de tags Cucumber (ex.: @smoke, not @bug, @bug)"
+        required: false
+        default: "not @bug"
+      base_url:
+        description: "URL base da API"
+        required: false
+        default: "https://restful-booker.herokuapp.com"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint e formatação
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CYPRESS_INSTALL_BINARY: 0
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npx prettier --check .
+
+  cypress:
+    name: Testes de API (Cypress + Cucumber)
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Cache do binário do Cypress
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - run: npm ci
+
+      - run: npx cypress verify
+
+      - name: Executar testes
+        # Inputs passados por variável de ambiente para evitar injeção de comandos no shell.
+        run: npx cypress run --expose tags="$TAGS"
+        env:
+          TAGS: ${{ inputs.tags || 'not @bug' }}
+          BASE_URL: ${{ inputs.base_url || 'https://restful-booker.herokuapp.com' }}
+          CYPRESS_AUTH_USERNAME: ${{ secrets.AUTH_USERNAME || 'admin' }}
+          CYPRESS_AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD || 'password123' }}
+
+      - name: Publicar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ github.run_number }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14
