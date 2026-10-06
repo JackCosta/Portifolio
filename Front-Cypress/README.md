@@ -99,3 +99,27 @@ Ao fim de cada execução são gerados:
 Cada bloco de validações ("Então" + "E") anexa um print da tela ao passo correspondente. Nos cenários com
 falha, incluindo os `@bug`, o print do momento da falha e a mensagem de erro também são anexados. Para o
 relatório completo, com as falhas esperadas, execute `npm run test:all`.
+
+## Integração contínua (GitHub Actions)
+
+O workflow fica em [`../.github/workflows/front-e2e-tests.yml`](../.github/workflows/front-e2e-tests.yml), na
+raiz do repositório, porque o GitHub só lê workflows de lá. Ele roda a partir desta pasta (`Front-Cypress`).
+
+| Gatilho             | Quando                                                       |
+| ------------------- | ------------------------------------------------------------ |
+| `push` na `main`    | Alterações em `Front-Cypress/**` ou no próprio workflow      |
+| `pull_request`      | Mesmos caminhos                                              |
+| `schedule`          | Diariamente às 06:00 (BRT), para detectar mudanças no site   |
+| `workflow_dispatch` | Manual, com a expressão de tags e a URL base como parâmetros |
+
+Jobs:
+
+1. **Lint e formatação**: ESLint e Prettier.
+2. **Testes E2E (suíte estável)**: `not @bug` (ou as tags informadas na execução manual). Reprova o pipeline
+   se algum cenário falhar.
+3. **Defeitos conhecidos**: roda os cenários `@bug` com `continue-on-error`. Gera o relatório com as falhas
+   esperadas sem reprovar o pipeline.
+
+Cada job de teste publica um resumo por cenário na página da execução (`scripts/ci-summary.js`) e envia
+`reports/` e `cypress/screenshots/` como artefato, mantido por 14 dias. As credenciais podem vir dos secrets
+`LOGIN_USERNAME` e `LOGIN_PASSWORD`. Sem eles, são usadas as credenciais públicas do SauceDemo.

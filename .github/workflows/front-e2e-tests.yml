@@ -1,0 +1,155 @@
+name: Front E2E Tests (SauceDemo)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Front-Cypress/**"
+      - ".github/workflows/front-e2e-tests.yml"
+  pull_request:
+    paths:
+      - "Front-Cypress/**"
+      - ".github/workflows/front-e2e-tests.yml"
+  schedule:
+    # Execução diária (06:00 BRT) para detectar mudanças no site.
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: "Expressão de tags Cucumber (ex.: @smoke, @checkout, not @bug)"
+        required: false
+        default: "not @bug"
+      base_url:
+        description: "URL base do site"
+        required: false
+        default: "https://www.saucedemo.com"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: Front-Cypress
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  lint:
+    name: Lint e formatação
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CYPRESS_INSTALL_BINARY: 0
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: Front-Cypress/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npx prettier --check .
+
+  e2e:
+    name: Testes E2E (suíte estável)
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: Front-Cypress/package-lock.json
+
+      - name: Cache do binário do Cypress
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('Front-Cypress/package-lock.json') }}
+
+      - run: npm ci
+
+      - run: npx cypress verify
+
+      - name: Executar testes
+        # Inputs passados por variável de ambiente para evitar injeção de comandos no shell.
+        run: npx cypress run --expose tags="$TAGS"
+        env:
+          TAGS: ${{ inputs.tags || 'not @bug' }}
+          BASE_URL: ${{ inputs.base_url || 'https://www.saucedemo.com' }}
+          CYPRESS_LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME || 'standard_user' }}
+          CYPRESS_LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD || 'secret_sauce' }}
+
+      - name: Resumo da execução
+        if: always()
+        run: node scripts/ci-summary.js "Suíte estável" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publicar relatório e evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report-${{ github.run_number }}
+          path: |
+            Front-Cypress/reports/
+            Front-Cypress/cypress/screenshots/
+          if-no-files-found: warn
+          retention-days: 14
+
+  known-bugs:
+    name: Defeitos conhecidos (@bug, falhas esperadas)
+    needs: lint
+    # Os cenários @bug falham enquanto o site não for corrigido. O job roda para gerar
+    # o relatório com as evidências das falhas, mas não reprova o pipeline.
+    if: ${{ !inputs.tags }}
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: Front-Cypress/package-lock.json
+
+      - name: Cache do binário do Cypress
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('Front-Cypress/package-lock.json') }}
+
+      - run: npm ci
+
+      - name: Executar cenários @bug
+        run: npx cypress run --expose tags=@bug --config retries=0
+        env:
+          BASE_URL: ${{ inputs.base_url || 'https://www.saucedemo.com' }}
+
+      - name: Resumo da execução
+        if: always()
+        run: node scripts/ci-summary.js "Defeitos conhecidos (@bug)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publicar relatório e evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: known-bugs-report-${{ github.run_number }}
+          path: |
+            Front-Cypress/reports/
+            Front-Cypress/cypress/screenshots/
+          if-no-files-found: warn
+          retention-days: 14
