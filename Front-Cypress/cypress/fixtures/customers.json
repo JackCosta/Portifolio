@@ -1,0 +1,9 @@
+{
+  "cliente válido": { "firstName": "Maria", "lastName": "Silva", "postalCode": "01310-100" },
+  "nome em branco": { "firstName": "", "lastName": "Silva", "postalCode": "01310-100" },
+  "sobrenome em branco": { "firstName": "Maria", "lastName": "", "postalCode": "01310-100" },
+  "CEP em branco": { "firstName": "Maria", "lastName": "Silva", "postalCode": "" },
+  "todos os campos em branco": { "firstName": "", "lastName": "", "postalCode": "" },
+  "campos com apenas espaços": { "firstName": "   ", "lastName": "   ", "postalCode": "   " },
+  "CEP com caracteres especiais": { "firstName": "Maria", "lastName": "Silva", "postalCode": "!@#$%" }
+}

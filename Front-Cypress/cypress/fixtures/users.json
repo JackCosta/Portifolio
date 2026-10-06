@@ -1,0 +1,14 @@
+{
+  "invalidCredentials": {
+    "usuário e senha em branco": { "username": "", "password": "" },
+    "usuário em branco": { "username": "", "password": "secret_sauce" },
+    "senha em branco": { "username": "standard_user", "password": "" },
+    "senha incorreta": { "username": "standard_user", "password": "senha_errada" },
+    "usuário inexistente": { "username": "usuario_inexistente", "password": "secret_sauce" },
+    "usuário em caixa alta": { "username": "STANDARD_USER", "password": "secret_sauce" },
+    "senha em caixa alta": { "username": "standard_user", "password": "SECRET_SAUCE" },
+    "usuário com espaços": { "username": " standard_user ", "password": "secret_sauce" },
+    "injeção de SQL": { "username": "' OR '1'='1", "password": "' OR '1'='1" },
+    "usuário bloqueado": { "username": "locked_out_user", "password": "secret_sauce" }
+  }
+}
