@@ -102,13 +102,16 @@ relatório completo, com as falhas esperadas, execute `npm run test:all`.
 
 ## Integração contínua (GitHub Actions)
 
-O workflow fica em [`../.github/workflows/front-e2e-tests.yml`](../.github/workflows/front-e2e-tests.yml), na
-raiz do repositório, porque o GitHub só lê workflows de lá. Ele roda a partir desta pasta (`Front-Cypress`).
+O workflow fica em [`.github/workflows/front-e2e-tests.yml`](.github/workflows/front-e2e-tests.yml) e considera
+esta pasta (`Front-Cypress`) como a raiz do repositório.
+
+> O GitHub só executa workflows que estão em `.github/workflows` na raiz do repositório. Para o pipeline rodar,
+> esta pasta precisa ser publicada como um repositório próprio.
 
 | Gatilho             | Quando                                                       |
 | ------------------- | ------------------------------------------------------------ |
-| `push` na `main`    | Alterações em `Front-Cypress/**` ou no próprio workflow      |
-| `pull_request`      | Mesmos caminhos                                              |
+| `push` na `main`    | A cada push                                                  |
+| `pull_request`      | A cada pull request                                          |
 | `schedule`          | Diariamente às 06:00 (BRT), para detectar mudanças no site   |
 | `workflow_dispatch` | Manual, com a expressão de tags e a URL base como parâmetros |
 

@@ -3,13 +3,7 @@ name: Front E2E Tests (SauceDemo)
 on:
   push:
     branches: [main]
-    paths:
-      - "Front-Cypress/**"
-      - ".github/workflows/front-e2e-tests.yml"
   pull_request:
-    paths:
-      - "Front-Cypress/**"
-      - ".github/workflows/front-e2e-tests.yml"
   schedule:
     # Execução diária (06:00 BRT) para detectar mudanças no site.
     - cron: "0 9 * * *"
@@ -31,10 +25,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    working-directory: Front-Cypress
-
 env:
   NODE_VERSION: 22
 
@@ -52,7 +42,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: Front-Cypress/package-lock.json
 
       - run: npm ci
 
@@ -72,13 +61,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: Front-Cypress/package-lock.json
 
       - name: Cache do binário do Cypress
         uses: actions/cache@v4
         with:
           path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('Front-Cypress/package-lock.json') }}
+          key: cypress-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - run: npm ci
 
@@ -103,8 +91,8 @@ jobs:
         with:
           name: e2e-report-${{ github.run_number }}
           path: |
-            Front-Cypress/reports/
-            Front-Cypress/cypress/screenshots/
+            reports/
+            cypress/screenshots/
           if-no-files-found: warn
           retention-days: 14
 
@@ -124,13 +112,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: Front-Cypress/package-lock.json
 
       - name: Cache do binário do Cypress
         uses: actions/cache@v4
         with:
           path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('Front-Cypress/package-lock.json') }}
+          key: cypress-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - run: npm ci
 
@@ -149,7 +136,7 @@ jobs:
         with:
           name: known-bugs-report-${{ github.run_number }}
           path: |
-            Front-Cypress/reports/
-            Front-Cypress/cypress/screenshots/
+            reports/
+            cypress/screenshots/
           if-no-files-found: warn
           retention-days: 14
