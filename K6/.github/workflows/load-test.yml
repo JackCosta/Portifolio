@@ -1,0 +1,54 @@
+name: Load Test (k6)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "Perfil de carga (smoke = validação rápida, load = 500 VUs por 5 min)"
+        required: true
+        default: smoke
+        type: choice
+        options: [smoke, load]
+      base_url:
+        description: "URL base da API"
+        required: false
+        default: "https://restful-booker.herokuapp.com"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  k6:
+    name: k6 (${{ inputs.profile || 'smoke' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: grafana/setup-k6-action@v1
+
+      # Push/PR só executam o smoke; a carga de 500 VUs é disparada manualmente para não
+      # sobrecarregar a API pública a cada commit.
+      - name: Executar k6
+        run: k6 run -e PROFILE="$PROFILE" -e BASE_URL="$BASE_URL" src/tests/booking-load.test.js
+        env:
+          PROFILE: ${{ inputs.profile || 'smoke' }}
+          BASE_URL: ${{ inputs.base_url || 'https://restful-booker.herokuapp.com' }}
+          K6_WEB_DASHBOARD: "true"
+          K6_WEB_DASHBOARD_EXPORT: reports/${{ inputs.profile || 'smoke' }}-dashboard.html
+
+      - name: Publicar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-reports-${{ github.run_number }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14

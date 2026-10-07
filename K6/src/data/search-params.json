@@ -1,0 +1,16 @@
+{
+  "names": [
+    { "firstname": "James", "lastname": "Brown" },
+    { "firstname": "Jim", "lastname": "Brown" },
+    { "firstname": "Sally", "lastname": "Brown" },
+    { "firstname": "Mary", "lastname": "Smith" },
+    { "firstname": "Eric", "lastname": "Wilson" },
+    { "firstname": "Susan", "lastname": "Jackson" }
+  ],
+  "dates": [
+    { "checkin": "2025-01-01", "checkout": "2025-12-31" },
+    { "checkin": "2026-01-01", "checkout": "2026-01-05" },
+    { "checkin": "2018-01-01", "checkout": "2019-01-01" },
+    { "checkin": "2024-06-01", "checkout": "2024-06-30" }
+  ]
+}

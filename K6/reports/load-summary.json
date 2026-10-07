@@ -1,0 +1,448 @@
+{
+  "metrics": {
+    "group_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 310.4477101337435,
+        "min": 129.731214,
+        "med": 275.42129,
+        "p(90)": 461.4180792000008,
+        "p(95)": 707.9460915999995,
+        "p(99)": 1816.8355376400016,
+        "max": 8101.371135
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 73828
+      },
+      "thresholds": {
+        "rate<0.01": {
+          "ok": true
+        }
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 295308,
+        "fails": 0
+      },
+      "thresholds": {
+        "rate>0.99": {
+          "ok": true
+        }
+      }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 73828,
+        "rate": 187.69335061653814
+      }
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 500,
+        "min": 500,
+        "max": 500
+      }
+    },
+    "bookings_returned": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "avg": 810.1674184241538,
+        "min": 0,
+        "med": 486,
+        "p(90)": 2244,
+        "p(95)": 2448,
+        "p(99)": 2616,
+        "max": 2745
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0,
+        "med": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "max": 181.186,
+        "avg": 0.9526154440049833
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 0,
+        "max": 159.712,
+        "avg": 1.0081982445684563,
+        "min": 0,
+        "med": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(99)": 49.79918999999917,
+        "max": 2594.945,
+        "avg": 2.8519398737606525,
+        "min": 0.04,
+        "med": 0.142,
+        "p(90)": 0.357,
+        "p(95)": 0.855
+      }
+    },
+    "http_req_duration{endpoint:filter_dates}": {
+      "thresholds": {
+        "p(95)<1500": {
+          "ok": true
+        }
+      },
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 129.91,
+        "med": 140.271,
+        "p(90)": 222.148,
+        "p(95)": 416.562,
+        "p(99)": 799.637199999999,
+        "max": 3338.447,
+        "avg": 177.70358810378846
+      }
+    },
+    "response_size_bytes": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "p(90)": 41857,
+        "p(95)": 45733,
+        "p(99)": 48934,
+        "max": 51385,
+        "avg": 15002.94042829859,
+        "min": 2,
+        "med": 8655
+      }
+    },
+    "http_req_duration": {
+      "thresholds": {
+        "p(95)<2000": {
+          "ok": true
+        },
+        "p(99)<4000": {
+          "ok": true
+        }
+      },
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 260.13853769572427,
+        "min": 129.287,
+        "med": 268.602,
+        "p(90)": 422.3953,
+        "p(95)": 502.0460999999998,
+        "p(99)": 913.4203899999945,
+        "max": 3936.719
+      }
+    },
+    "http_req_duration{endpoint:filter_name}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 226.43870000000007,
+        "p(95)": 416.8190500000001,
+        "p(99)": 788.0093900000006,
+        "max": 3623.263,
+        "avg": 177.2126747568401,
+        "min": 129.287,
+        "med": 139.899
+      },
+      "thresholds": {
+        "p(95)<1500": {
+          "ok": true
+        }
+      }
+    },
+    "functional_errors": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 73827
+      },
+      "thresholds": {
+        "rate<0.20": {
+          "ok": true
+        }
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0.001,
+        "p(90)": 0.002,
+        "p(95)": 0.002,
+        "p(99)": 0.015,
+        "max": 333.316,
+        "avg": 1.9739704989915543,
+        "min": 0
+      }
+    },
+    "http_req_duration{endpoint:list_all}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 284.03,
+        "p(90)": 435.6154000000001,
+        "p(95)": 550.45945,
+        "p(99)": 989.3174400000006,
+        "max": 3936.719,
+        "avg": 342.1987871519553,
+        "min": 131.063
+      },
+      "thresholds": {
+        "p(95)<2500": {
+          "ok": true
+        }
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 260.13853769572427,
+        "min": 129.287,
+        "med": 268.602,
+        "p(90)": 422.3953,
+        "p(95)": 502.0460999999998,
+        "p(99)": 913.4203899999945,
+        "max": 3936.719
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 37.629000000000005,
+        "p(90)": 270.1702,
+        "p(95)": 280.03164999999996,
+        "p(99)": 382.1920599999995,
+        "max": 3572.319,
+        "avg": 89.84381993281754,
+        "min": 0.027
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 10566.568113,
+        "avg": 2340.655369751632,
+        "min": 1133.740119,
+        "med": 2319.115022,
+        "p(90)": 3128.8316588,
+        "p(95)": 3306.2401099,
+        "p(99)": 4311.6582314200095
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 73827,
+        "rate": 187.69080831076505
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 7015343,
+        "rate": 17835.147009187254
+      }
+    },
+    "data_received": {
+      "values": {
+        "count": 1145331897,
+        "rate": 2911783.893860402
+      },
+      "type": "counter",
+      "contains": "data"
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 3422.966,
+        "avg": 167.44277788914653,
+        "min": 0,
+        "med": 140.011,
+        "p(90)": 200.67980000000003,
+        "p(95)": 339.39734999999956,
+        "p(99)": 622.058199999999
+      }
+    },
+    "vus": {
+      "values": {
+        "max": 500,
+        "value": 1,
+        "min": 1
+      },
+      "type": "gauge",
+      "contains": "default"
+    }
+  },
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [
+      {
+        "id": "402836171a17ae4f5cc47501e1b09613",
+        "groups": [],
+        "checks": [
+            {
+              "path": "::Example 2 - Filtro por nome::status é 200",
+              "id": "c1069990b53acfcb2f5a28c4a7ed1a90",
+              "passes": 22002,
+              "fails": 0,
+              "name": "status é 200"
+            },
+            {
+              "name": "content-type é JSON",
+              "path": "::Example 2 - Filtro por nome::content-type é JSON",
+              "id": "8a25d9acc8d3af0145c9bb748453c0e0",
+              "passes": 22002,
+              "fails": 0
+            },
+            {
+              "passes": 22002,
+              "fails": 0,
+              "name": "corpo é um array",
+              "path": "::Example 2 - Filtro por nome::corpo é um array",
+              "id": "b79b4fbb0a56939d4417018bce763ad8"
+            },
+            {
+              "name": "itens possuem bookingid numérico",
+              "path": "::Example 2 - Filtro por nome::itens possuem bookingid numérico",
+              "id": "b070f46bc6c3a7890c34d91618384e3c",
+              "passes": 22002,
+              "fails": 0
+            }
+          ],
+        "name": "Example 2 - Filtro por nome",
+        "path": "::Example 2 - Filtro por nome"
+      },
+      {
+        "path": "::Example 1 - Todos os IDs",
+        "id": "5b55f7215a9864f408325eb318edfec2",
+        "groups": [],
+        "checks": [
+            {
+              "name": "status é 200",
+              "path": "::Example 1 - Todos os IDs::status é 200",
+              "id": "2861a0b05c818dad3337debd0f3e70af",
+              "passes": 37064,
+              "fails": 0
+            },
+            {
+              "path": "::Example 1 - Todos os IDs::content-type é JSON",
+              "id": "1cb22f9d5f126978ea26c663f99e1f06",
+              "passes": 37064,
+              "fails": 0,
+              "name": "content-type é JSON"
+            },
+            {
+              "fails": 0,
+              "name": "corpo é um array",
+              "path": "::Example 1 - Todos os IDs::corpo é um array",
+              "id": "a8e2fc4c3782283ec1e955d16b69bb5c",
+              "passes": 37064
+            },
+            {
+              "name": "itens possuem bookingid numérico",
+              "path": "::Example 1 - Todos os IDs::itens possuem bookingid numérico",
+              "id": "819bef0a2129980afb8943b6f9fe7da3",
+              "passes": 37064,
+              "fails": 0
+            }
+          ],
+        "name": "Example 1 - Todos os IDs"
+      },
+      {
+        "name": "Example 3 - Filtro por datas",
+        "path": "::Example 3 - Filtro por datas",
+        "id": "d7c9cdbc0957d55098bca473cde911a1",
+        "groups": [],
+        "checks": [
+            {
+              "name": "status é 200",
+              "path": "::Example 3 - Filtro por datas::status é 200",
+              "id": "4db8a6bff53b5897dcf650b61a6e631f",
+              "passes": 14761,
+              "fails": 0
+            },
+            {
+              "name": "content-type é JSON",
+              "path": "::Example 3 - Filtro por datas::content-type é JSON",
+              "id": "4fc394737e8b9888172fbad6348d69d4",
+              "passes": 14761,
+              "fails": 0
+            },
+            {
+              "name": "corpo é um array",
+              "path": "::Example 3 - Filtro por datas::corpo é um array",
+              "id": "80fbd3e2d24779791c0bde1f39d3def6",
+              "passes": 14761,
+              "fails": 0
+            },
+            {
+              "name": "itens possuem bookingid numérico",
+              "path": "::Example 3 - Filtro por datas::itens possuem bookingid numérico",
+              "id": "166ba3b15a6098c4eb80f1ab4202b94d",
+              "passes": 14761,
+              "fails": 0
+            }
+          ]
+      }
+    ],
+    "checks": []
+  },
+  "options": {
+    "noColor": false,
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "p(90)",
+      "p(95)",
+      "p(99)",
+      "max"
+    ],
+    "summaryTimeUnit": ""
+  },
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 393343.716
+  }
+}
