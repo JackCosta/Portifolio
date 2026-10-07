@@ -26,7 +26,7 @@ Funcionalidade: Criação de reserva (POST /booking)
   @negative @regression
   Cenário: Rejeitar corpo com JSON malformado
     Quando eu cadastro uma reserva com o corpo "{firstname: Ana"
-    Então o status code da resposta deve ser 500
+    Então o status code da resposta deve ser 400
     E a resposta deve ser texto com a mensagem "Bad Request"
 
   @negative @regression
