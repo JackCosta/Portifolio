@@ -1,0 +1,175 @@
+name: E2E Playwright (SauceDemo)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Execução diária (06:00 BRT) para detectar mudanças no site.
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      grep:
+        description: "Filtro de tags/título (ex.: @smoke, @negative, @login)"
+        required: false
+        default: ""
+      base_url:
+        description: "URL base do site"
+        required: false
+        default: "https://www.saucedemo.com"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  lint:
+    name: Lint, tipos e Gherkin
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npx eslint . --max-warnings=0
+
+      - run: npm run format:check
+
+      # Falha se algum passo das features não tiver implementação.
+      - run: npx bddgen
+
+  e2e:
+    name: E2E (${{ matrix.project }})
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: chromium
+            browser: chromium
+          - project: firefox
+            browser: firefox
+          - project: webkit
+            browser: webkit
+          - project: mobile-chrome
+            browser: chromium
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Cache dos navegadores do Playwright
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Instalar navegador
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps "${{ matrix.browser }}"
+
+      - name: Instalar dependências do sistema
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps "${{ matrix.browser }}"
+
+      - run: npx bddgen
+
+      - name: Executar testes
+        # Inputs passados por variável de ambiente para evitar injeção de comandos no shell.
+        run: npx playwright test --project="$PROJECT" ${GREP:+--grep "$GREP"}
+        env:
+          PROJECT: ${{ matrix.project }}
+          GREP: ${{ inputs.grep }}
+          BASE_URL: ${{ inputs.base_url || 'https://www.saucedemo.com' }}
+          LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME || 'standard_user' }}
+          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD || 'secret_sauce' }}
+
+      - name: Publicar blob para o relatório unificado
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.project }}
+          path: blob-report/
+          retention-days: 1
+
+      - name: Publicar relatórios e evidências (${{ matrix.project }})
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ matrix.project }}-${{ github.run_number }}
+          path: |
+            reports/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 14
+
+  report:
+    name: Relatório unificado
+    needs: e2e
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Unir relatórios
+        run: |
+          npx playwright merge-reports --reporter html ./all-blob-reports
+          PLAYWRIGHT_JSON_OUTPUT_NAME=results.json npx playwright merge-reports --reporter json ./all-blob-reports
+
+      - name: Resumo da execução
+        run: |
+          node -e '
+            const { stats } = require("./results.json");
+            const total = stats.expected + stats.unexpected + stats.flaky + stats.skipped;
+            console.log("## Resultado E2E (todos os navegadores)\n");
+            console.log("| Total | Passaram | Falharam | Instáveis | Ignorados | Duração |");
+            console.log("| ----- | -------- | -------- | --------- | --------- | ------- |");
+            console.log(`| ${total} | ${stats.expected} | ${stats.unexpected} | ${stats.flaky} | ${stats.skipped} | ${Math.round(stats.duration / 1000)}s |`);
+          ' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publicar relatório HTML unificado
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_number }}
+          path: playwright-report/
+          retention-days: 14

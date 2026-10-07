@@ -1,0 +1,41 @@
+{
+  "name": "saucedemo-playwright-bdd",
+  "version": "1.0.0",
+  "description": "Testes E2E do SauceDemo (login e navegação até o formulário do comprador) com Playwright, BDD (playwright-bdd) e Page Objects",
+  "scripts": {
+    "bddgen": "bddgen",
+    "pretest": "bddgen",
+    "test": "playwright test",
+    "test:chromium": "bddgen && playwright test --project=chromium",
+    "test:smoke": "bddgen && playwright test --grep @smoke",
+    "test:positive": "bddgen && playwright test --grep @positive",
+    "test:negative": "bddgen && playwright test --grep @negative",
+    "test:login": "bddgen && playwright test --grep @login",
+    "test:navigation": "bddgen && playwright test --grep @navigation",
+    "test:headed": "bddgen && playwright test --project=chromium --headed",
+    "test:ui": "bddgen && playwright test --ui",
+    "report": "playwright show-report reports/playwright",
+    "report:cucumber": "open reports/cucumber/index.html",
+    "install:browsers": "playwright install --with-deps",
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.4",
+    "dotenv": "^18.0.6",
+    "eslint": "^10.12.0",
+    "eslint-plugin-playwright": "^2.12.1",
+    "playwright-bdd": "^9.2.1",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}

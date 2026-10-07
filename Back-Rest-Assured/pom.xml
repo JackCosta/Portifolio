@@ -93,6 +93,12 @@
             <artifactId>junit-platform-suite</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Fixa o engine Jupiter na versão do BOM para a IDE não injetar uma versão incompatível -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Asserções -->
         <dependency>
