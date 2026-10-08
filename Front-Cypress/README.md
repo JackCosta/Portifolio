@@ -53,11 +53,6 @@ Fluxo principal: comprar **Sauce Labs Backpack ($29.99)** e **Sauce Labs Bike Li
 | Negativo | Cancelar na etapa de informações volta ao carrinho sem perder os produtos                                                                                                                                                                     |
 | Negativo | Acesso direto a `/cart.html` e às etapas do checkout sem login é bloqueado                                                                                                                                                                    |
 
-> **Cartão e endereço:** o SauceDemo não tem campo de cartão nem de endereço completo. A etapa de informações
-> pede apenas Nome, Sobrenome e CEP, e o pagamento é fixo ("SauceCard #31337"). Por isso, "endereço
-> incompleto" é coberto pelos campos obrigatórios em branco, e a forma de pagamento é validada na revisão do
-> pedido. Não há como testar um número de cartão inválido nesta aplicação.
-
 ### Falhas esperadas: defeitos encontrados (`@bug`)
 
 Os cenários `@bug` verificam o comportamento **correto** e falham enquanto o site não for corrigido. Eles

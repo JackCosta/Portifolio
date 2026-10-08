@@ -9,14 +9,14 @@ validando cada etapa da navegação com asserções.
 
 ## Stack
 
-| Item       | Ferramenta                                                          |
-| ---------- | ------------------------------------------------------------------- |
-| Runner     | Playwright Test 1.63 (Chromium, Firefox, WebKit e Pixel 7)          |
-| BDD        | playwright-bdd 9 (features em Gherkin `# language: pt`)             |
-| Linguagem  | TypeScript (strict)                                                 |
-| Qualidade  | ESLint (typescript-eslint + eslint-plugin-playwright) e Prettier    |
-| Relatórios | Playwright HTML, Cucumber HTML/JSON, JUnit XML                      |
-| CI/CD      | GitHub Actions (lint → matriz de navegadores → relatório unificado) |
+| Item       | Ferramenta                                                            |
+| ---------- | --------------------------------------------------------------------- |
+| Runner     | Playwright Test 1.63 (Chromium, Firefox, WebKit, Pixel 7 e iPhone 15) |
+| BDD        | playwright-bdd 9 (features em Gherkin `# language: pt`)               |
+| Linguagem  | TypeScript (strict)                                                   |
+| Qualidade  | ESLint (typescript-eslint + eslint-plugin-playwright) e Prettier      |
+| Relatórios | Playwright HTML, Cucumber HTML/JSON, JUnit XML                        |
+| CI/CD      | GitHub Actions (lint → matriz de navegadores → relatório unificado)   |
 
 ## Estrutura
 
@@ -130,7 +130,7 @@ Para filtrar por navegador e tag ao mesmo tempo: `npx bddgen && npx playwright t
 (com filtro de tags e URL base opcionais).
 
 1. **Lint, tipos e Gherkin**: `tsc`, ESLint sem avisos, Prettier e `bddgen` (falha se faltar step).
-2. **E2E**: matriz paralela com Chromium, Firefox, WebKit e Mobile Chrome. Usa cache dos navegadores e 2
+2. **E2E**: matriz paralela com Chromium, Firefox, WebKit, Mobile Chrome (Pixel 7) e Mobile Safari (iPhone 15). Usa cache dos navegadores e 2
    retentativas. Cada job publica relatórios, traces, vídeos e screenshots como artefatos.
 3. **Relatório unificado**: une os resultados de todos os navegadores em um único relatório HTML (artefato
    `playwright-report-<n>`) e escreve o resumo na página da execução.

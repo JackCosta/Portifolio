@@ -1,0 +1,3802 @@
+{
+  "run": {
+    "mode": "Execução local (ci/run-local.sh)",
+    "runner": "darwin · Node v24.20.0",
+    "url": "",
+    "event": "manual (local)",
+    "branch": "main",
+    "commit": "868f222",
+    "commitMessage": "Create README.md - Portifolio",
+    "dirty": true,
+    "startedAt": "",
+    "finishedAt": "2026-10-08T13:21:27.566Z"
+  },
+  "gate": "aprovado",
+  "totals": {
+    "scenarios": 231,
+    "passed": 230,
+    "failed": 0,
+    "skipped": 1,
+    "expectedFailures": 21,
+    "bugsPassing": 0,
+    "evidence": 44
+  },
+  "jobs": [
+    {
+      "id": "quality",
+      "name": "Qualidade (lint, tipos, compilação)",
+      "stage": 1,
+      "blocking": true,
+      "result": "success",
+      "durationMs": 24678
+    },
+    {
+      "id": "api-cypress",
+      "name": "API · Cypress",
+      "stage": 2,
+      "blocking": true,
+      "result": "success",
+      "durationMs": 95104
+    },
+    {
+      "id": "api-rest-assured",
+      "name": "API · Rest Assured",
+      "stage": 2,
+      "blocking": true,
+      "result": "success",
+      "durationMs": 27434
+    },
+    {
+      "id": "e2e-cypress",
+      "name": "E2E · Cypress",
+      "stage": 2,
+      "blocking": true,
+      "result": "success",
+      "durationMs": 102182
+    },
+    {
+      "id": "e2e-playwright",
+      "name": "E2E · Playwright (3 navegadores)",
+      "stage": 2,
+      "blocking": true,
+      "result": "success",
+      "durationMs": 141766
+    },
+    {
+      "id": "mobile",
+      "name": "Mobile · Playwright (2 dispositivos)",
+      "stage": 2,
+      "blocking": true,
+      "result": "success",
+      "durationMs": 62362
+    },
+    {
+      "id": "performance",
+      "name": "Performance · k6",
+      "stage": 3,
+      "blocking": true,
+      "result": "success",
+      "durationMs": 32990
+    },
+    {
+      "id": "known-bugs-api-cypress",
+      "name": "Defeitos conhecidos · API Cypress",
+      "stage": 2,
+      "blocking": false,
+      "result": "success",
+      "durationMs": 44358
+    },
+    {
+      "id": "known-bugs-api-rest-assured",
+      "name": "Defeitos conhecidos · API Rest Assured",
+      "stage": 2,
+      "blocking": false,
+      "result": "success",
+      "durationMs": 14037
+    },
+    {
+      "id": "known-bugs-e2e-cypress",
+      "name": "Defeitos conhecidos · E2E Cypress",
+      "stage": 2,
+      "blocking": false,
+      "result": "success",
+      "durationMs": 129323
+    }
+  ],
+  "suites": [
+    {
+      "id": "api-cypress",
+      "job": "api-cypress",
+      "layer": "API",
+      "app": "Restful-Booker",
+      "tool": "Cypress + Cucumber",
+      "format": "cucumber",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Gerar token com credenciais válidas",
+          "status": "passed",
+          "durationMs": 857,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Validar contrato da resposta de sucesso",
+          "status": "passed",
+          "durationMs": 308,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@contract",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Cada solicitação gera um token diferente",
+          "status": "passed",
+          "durationMs": 433,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Não gerar token com senha incorreta",
+          "status": "passed",
+          "durationMs": 374,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Não gerar token com usuário inexistente",
+          "status": "passed",
+          "durationMs": 317,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Não gerar token com credenciais em branco",
+          "status": "passed",
+          "durationMs": 315,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Não gerar token com usuário em caixa alta",
+          "status": "passed",
+          "durationMs": 365,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Não gerar token com senha ausente",
+          "status": "passed",
+          "durationMs": 367,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Não gerar token com usuário ausente",
+          "status": "passed",
+          "durationMs": 319,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Não gerar token com corpo vazio",
+          "status": "passed",
+          "durationMs": 323,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Rejeitar corpo com JSON malformado",
+          "status": "passed",
+          "durationMs": 281,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Token gerado autoriza operação protegida",
+          "status": "passed",
+          "durationMs": 773,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@integration",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Token inválido não autoriza operação protegida",
+          "status": "passed",
+          "durationMs": 565,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@auth",
+            "@integration",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "Criar reserva com dados válidos",
+          "status": "passed",
+          "durationMs": 879,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@post",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "Criar reserva sem o campo opcional additionalneeds",
+          "status": "passed",
+          "durationMs": 458,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@post",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "Rejeitar corpo com JSON malformado",
+          "status": "passed",
+          "durationMs": 249,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@post",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "Rejeitar header Accept não suportado",
+          "status": "passed",
+          "durationMs": 287,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@post",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Exclusão de reserva (DELETE /booking/:id)",
+          "name": "Excluir reserva autenticando via cookie com token",
+          "status": "passed",
+          "durationMs": 1068,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@delete",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Exclusão de reserva (DELETE /booking/:id)",
+          "name": "Excluir reserva autenticando via header Authorization (Basic)",
+          "status": "passed",
+          "durationMs": 798,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@delete",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Exclusão de reserva (DELETE /booking/:id)",
+          "name": "Rejeitar exclusão com autenticação ausente",
+          "status": "passed",
+          "durationMs": 789,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@delete",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Exclusão de reserva (DELETE /booking/:id)",
+          "name": "Rejeitar exclusão com token inválido",
+          "status": "passed",
+          "durationMs": 785,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@delete",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Exclusão de reserva (DELETE /booking/:id)",
+          "name": "Rejeitar exclusão com credenciais Basic erradas",
+          "status": "passed",
+          "durationMs": 774,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@delete",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Listar todas as reservas",
+          "status": "passed",
+          "durationMs": 411,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Filtrar reservas por nome e sobrenome",
+          "status": "passed",
+          "durationMs": 701,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Filtrar reservas por data de checkin anterior à da reserva",
+          "status": "passed",
+          "durationMs": 608,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Filtrar reservas por data de checkout igual à da reserva",
+          "status": "passed",
+          "durationMs": 627,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Filtro sem correspondência retorna lista vazia",
+          "status": "passed",
+          "durationMs": 272,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Consultar uma reserva pelo ID",
+          "status": "passed",
+          "durationMs": 714,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Consultar uma reserva no formato XML",
+          "status": "passed",
+          "durationMs": 602,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Consultar reserva com ID inexistente",
+          "status": "passed",
+          "durationMs": 255,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Consultar reserva com ID não numérico",
+          "status": "passed",
+          "durationMs": 243,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "Consultar reserva com ID negativo",
+          "status": "passed",
+          "durationMs": 252,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@get",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Métodos HTTP não suportados",
+          "name": "Consultar os métodos permitidos na coleção de reservas",
+          "status": "passed",
+          "durationMs": 311,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@methods",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Métodos HTTP não suportados",
+          "name": "Rejeitar PUT em /booking",
+          "status": "passed",
+          "durationMs": 267,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@methods",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Métodos HTTP não suportados",
+          "name": "Rejeitar PATCH em /booking",
+          "status": "passed",
+          "durationMs": 252,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@methods",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Métodos HTTP não suportados",
+          "name": "Rejeitar DELETE em /booking",
+          "status": "passed",
+          "durationMs": 277,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@methods",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Métodos HTTP não suportados",
+          "name": "Rejeitar POST em /booking/1",
+          "status": "passed",
+          "durationMs": 243,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@methods",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Métodos HTTP não suportados",
+          "name": "Rejeitar POST em /auth/1",
+          "status": "passed",
+          "durationMs": 254,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@methods",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Métodos HTTP não suportados",
+          "name": "Rejeitar GET em /auth",
+          "status": "passed",
+          "durationMs": 249,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@methods",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Atualizar reserva autenticando via cookie com token",
+          "status": "passed",
+          "durationMs": 1145,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Atualizar reserva autenticando via header Authorization (Basic)",
+          "status": "passed",
+          "durationMs": 853,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@smoke",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização com autenticação ausente",
+          "status": "passed",
+          "durationMs": 790,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização com token inválido",
+          "status": "passed",
+          "durationMs": 781,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização com credenciais Basic erradas",
+          "status": "passed",
+          "durationMs": 778,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização sem o campo obrigatório firstname",
+          "status": "passed",
+          "durationMs": 928,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização sem o campo obrigatório lastname",
+          "status": "passed",
+          "durationMs": 924,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização sem o campo obrigatório totalprice",
+          "status": "passed",
+          "durationMs": 931,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização sem o campo obrigatório depositpaid",
+          "status": "passed",
+          "durationMs": 929,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização sem o campo obrigatório bookingdates",
+          "status": "passed",
+          "durationMs": 933,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "Rejeitar atualização com JSON malformado",
+          "status": "passed",
+          "durationMs": 925,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@put",
+            "@negative",
+            "@regression"
+          ],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0
+      },
+      "status": "passed",
+      "durationMs": 28139,
+      "evidence": 0
+    },
+    {
+      "id": "api-rest-assured",
+      "job": "api-rest-assured",
+      "layer": "API",
+      "app": "Restful-Booker",
+      "tool": "Java 21 + Rest Assured + Cucumber",
+      "format": "junit",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Credenciais inválidas deveriam retornar 401 Unauthorized",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Validar headers da resposta de sucesso",
+          "status": "passed",
+          "durationMs": 4729,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Gerar token com credenciais válidas",
+          "status": "passed",
+          "durationMs": 4738,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Validar contrato da resposta de sucesso",
+          "status": "passed",
+          "durationMs": 5116,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Gerar token ignorando campos adicionais no corpo",
+          "status": "passed",
+          "durationMs": 511,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Gerar token enviando credenciais como formulário",
+          "status": "passed",
+          "durationMs": 521,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Cada solicitação gera um token diferente",
+          "status": "passed",
+          "durationMs": 1474,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Token gerado autoriza operação protegida",
+          "status": "passed",
+          "durationMs": 1402,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Token inválido não autoriza operação protegida",
+          "status": "passed",
+          "durationMs": 6888,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Rejeitar corpo com JSON malformado",
+          "status": "passed",
+          "durationMs": 483,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.13",
+          "status": "passed",
+          "durationMs": 563,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.3",
+          "status": "passed",
+          "durationMs": 488,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.3",
+          "status": "passed",
+          "durationMs": 452,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.3",
+          "status": "passed",
+          "durationMs": 469,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.12",
+          "status": "passed",
+          "durationMs": 500,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.11",
+          "status": "passed",
+          "durationMs": 492,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.4",
+          "status": "passed",
+          "durationMs": 487,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.4",
+          "status": "passed",
+          "durationMs": 462,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.10",
+          "status": "passed",
+          "durationMs": 493,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "passed",
+          "durationMs": 650,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "passed",
+          "durationMs": 1239,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "passed",
+          "durationMs": 453,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "passed",
+          "durationMs": 468,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.9",
+          "status": "passed",
+          "durationMs": 465,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "passed",
+          "durationMs": 474,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "passed",
+          "durationMs": 450,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "passed",
+          "durationMs": 461,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "passed",
+          "durationMs": 461,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.8",
+          "status": "passed",
+          "durationMs": 480,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.7",
+          "status": "passed",
+          "durationMs": 451,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.5",
+          "status": "passed",
+          "durationMs": 472,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.6",
+          "status": "passed",
+          "durationMs": 470,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 32,
+        "passed": 31,
+        "failed": 0,
+        "skipped": 1
+      },
+      "status": "passed",
+      "durationMs": 37262,
+      "evidence": 0
+    },
+    {
+      "id": "e2e-cypress",
+      "job": "e2e-cypress",
+      "layer": "E2E",
+      "app": "SauceDemo",
+      "tool": "Cypress + Cucumber",
+      "target": "Electron",
+      "format": "cucumber",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Compra completa com dados válidos",
+          "status": "passed",
+          "durationMs": 6461,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@positive",
+            "@smoke"
+          ],
+          "evidence": 7
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Remover um produto do carrinho recalcula o pedido",
+          "status": "passed",
+          "durationMs": 2606,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@positive"
+          ],
+          "evidence": 3
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Cancelar na revisão do pedido mantém os produtos no carrinho",
+          "status": "passed",
+          "durationMs": 1778,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@positive"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Não avançar no checkout com dados incompletos: nome em branco",
+          "status": "passed",
+          "durationMs": 1610,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Não avançar no checkout com dados incompletos: sobrenome em branco",
+          "status": "passed",
+          "durationMs": 1591,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Não avançar no checkout com dados incompletos: CEP em branco",
+          "status": "passed",
+          "durationMs": 1552,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Não avançar no checkout com dados incompletos: todos os campos em branco",
+          "status": "passed",
+          "durationMs": 1374,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Corrigir os dados após o erro permite concluir a compra",
+          "status": "passed",
+          "durationMs": 2489,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 3
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Cancelar na etapa de informações volta ao carrinho sem perder os produtos",
+          "status": "passed",
+          "durationMs": 909,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Bloquear acesso direto a /cart.html sem login",
+          "status": "passed",
+          "durationMs": 364,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-step-one.html sem login",
+          "status": "passed",
+          "durationMs": 339,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-step-two.html sem login",
+          "status": "passed",
+          "durationMs": 348,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-complete.html sem login",
+          "status": "passed",
+          "durationMs": 338,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@checkout",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Exibir a tela de login",
+          "status": "passed",
+          "durationMs": 419,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@positive",
+            "@smoke"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login com credenciais válidas",
+          "status": "passed",
+          "durationMs": 893,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@positive",
+            "@smoke"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login submetendo o formulário com a tecla Enter",
+          "status": "passed",
+          "durationMs": 540,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@positive"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Logout após login com sucesso",
+          "status": "passed",
+          "durationMs": 1238,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@positive"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário e senha em branco",
+          "status": "passed",
+          "durationMs": 562,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em branco",
+          "status": "passed",
+          "durationMs": 602,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em branco",
+          "status": "passed",
+          "durationMs": 617,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha incorreta",
+          "status": "passed",
+          "durationMs": 682,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário inexistente",
+          "status": "passed",
+          "durationMs": 677,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em caixa alta",
+          "status": "passed",
+          "durationMs": 675,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em caixa alta",
+          "status": "passed",
+          "durationMs": 663,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário com espaços",
+          "status": "passed",
+          "durationMs": 670,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com injeção de SQL",
+          "status": "passed",
+          "durationMs": 673,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário bloqueado",
+          "status": "passed",
+          "durationMs": 674,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Fechar a mensagem de erro",
+          "status": "passed",
+          "durationMs": 709,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto à página de produtos sem login",
+          "status": "passed",
+          "durationMs": 302,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@login",
+            "@negative"
+          ],
+          "evidence": 1
+        }
+      ],
+      "totals": {
+        "total": 29,
+        "passed": 29,
+        "failed": 0,
+        "skipped": 0
+      },
+      "status": "passed",
+      "durationMs": 32355,
+      "evidence": 39
+    },
+    {
+      "id": "e2e-playwright-chromium",
+      "job": "e2e-playwright",
+      "layer": "E2E",
+      "app": "SauceDemo",
+      "tool": "Playwright + playwright-bdd (TypeScript)",
+      "target": "Chromium",
+      "format": "junit",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Exibir a tela de login",
+          "status": "passed",
+          "durationMs": 1515,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login com credenciais válidas",
+          "status": "passed",
+          "durationMs": 1844,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login submetendo o formulário com a tecla Enter",
+          "status": "passed",
+          "durationMs": 1303,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Logout após login com sucesso",
+          "status": "passed",
+          "durationMs": 1948,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário e senha em branco",
+          "status": "passed",
+          "durationMs": 1059,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em branco",
+          "status": "passed",
+          "durationMs": 1072,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em branco",
+          "status": "passed",
+          "durationMs": 1102,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha incorreta",
+          "status": "passed",
+          "durationMs": 1098,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário inexistente",
+          "status": "passed",
+          "durationMs": 1106,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em caixa alta",
+          "status": "passed",
+          "durationMs": 1092,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em caixa alta",
+          "status": "passed",
+          "durationMs": 1083,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário com espaços",
+          "status": "passed",
+          "durationMs": 1097,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com injeção de SQL",
+          "status": "passed",
+          "durationMs": 1087,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário bloqueado",
+          "status": "passed",
+          "durationMs": 1236,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Fechar a mensagem de erro",
+          "status": "passed",
+          "durationMs": 1256,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /inventory.html sem login",
+          "status": "passed",
+          "durationMs": 1238,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /cart.html sem login",
+          "status": "passed",
+          "durationMs": 1147,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-step-one.html sem login",
+          "status": "passed",
+          "durationMs": 1458,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Navegar do login até o formulário de dados do comprador",
+          "status": "passed",
+          "durationMs": 2072,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Enviar o formulário com dados válidos avança para a revisão do pedido",
+          "status": "passed",
+          "durationMs": 1851,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com nome em branco",
+          "status": "passed",
+          "durationMs": 1734,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com sobrenome em branco",
+          "status": "passed",
+          "durationMs": 1784,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com CEP em branco",
+          "status": "passed",
+          "durationMs": 1894,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com todos em branco",
+          "status": "passed",
+          "durationMs": 1965,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "status": "passed",
+      "durationMs": 34041,
+      "evidence": 0
+    },
+    {
+      "id": "e2e-playwright-firefox",
+      "job": "e2e-playwright",
+      "layer": "E2E",
+      "app": "SauceDemo",
+      "tool": "Playwright + playwright-bdd (TypeScript)",
+      "target": "Firefox",
+      "format": "junit",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Exibir a tela de login",
+          "status": "passed",
+          "durationMs": 5803,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login com credenciais válidas",
+          "status": "passed",
+          "durationMs": 6678,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login submetendo o formulário com a tecla Enter",
+          "status": "passed",
+          "durationMs": 2601,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Logout após login com sucesso",
+          "status": "passed",
+          "durationMs": 4688,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário e senha em branco",
+          "status": "passed",
+          "durationMs": 3981,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em branco",
+          "status": "passed",
+          "durationMs": 2179,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em branco",
+          "status": "passed",
+          "durationMs": 2333,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha incorreta",
+          "status": "passed",
+          "durationMs": 2586,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário inexistente",
+          "status": "passed",
+          "durationMs": 2564,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em caixa alta",
+          "status": "passed",
+          "durationMs": 2447,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em caixa alta",
+          "status": "passed",
+          "durationMs": 2789,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário com espaços",
+          "status": "passed",
+          "durationMs": 2971,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com injeção de SQL",
+          "status": "passed",
+          "durationMs": 2789,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário bloqueado",
+          "status": "passed",
+          "durationMs": 2777,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Fechar a mensagem de erro",
+          "status": "passed",
+          "durationMs": 2765,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /inventory.html sem login",
+          "status": "passed",
+          "durationMs": 2585,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /cart.html sem login",
+          "status": "passed",
+          "durationMs": 2628,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-step-one.html sem login",
+          "status": "passed",
+          "durationMs": 5991,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Navegar do login até o formulário de dados do comprador",
+          "status": "passed",
+          "durationMs": 3325,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Enviar o formulário com dados válidos avança para a revisão do pedido",
+          "status": "passed",
+          "durationMs": 6074,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com nome em branco",
+          "status": "passed",
+          "durationMs": 3164,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com sobrenome em branco",
+          "status": "passed",
+          "durationMs": 4380,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com CEP em branco",
+          "status": "passed",
+          "durationMs": 4584,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com todos em branco",
+          "status": "passed",
+          "durationMs": 3613,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "status": "passed",
+      "durationMs": 86295,
+      "evidence": 0
+    },
+    {
+      "id": "e2e-playwright-webkit",
+      "job": "e2e-playwright",
+      "layer": "E2E",
+      "app": "SauceDemo",
+      "tool": "Playwright + playwright-bdd (TypeScript)",
+      "target": "WebKit",
+      "format": "junit",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Exibir a tela de login",
+          "status": "passed",
+          "durationMs": 4871,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login com credenciais válidas",
+          "status": "passed",
+          "durationMs": 5896,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login submetendo o formulário com a tecla Enter",
+          "status": "passed",
+          "durationMs": 4532,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Logout após login com sucesso",
+          "status": "passed",
+          "durationMs": 5558,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário e senha em branco",
+          "status": "passed",
+          "durationMs": 3529,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em branco",
+          "status": "passed",
+          "durationMs": 3229,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em branco",
+          "status": "passed",
+          "durationMs": 3211,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha incorreta",
+          "status": "passed",
+          "durationMs": 3806,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário inexistente",
+          "status": "passed",
+          "durationMs": 3504,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em caixa alta",
+          "status": "passed",
+          "durationMs": 3293,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em caixa alta",
+          "status": "passed",
+          "durationMs": 3611,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário com espaços",
+          "status": "passed",
+          "durationMs": 3423,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com injeção de SQL",
+          "status": "passed",
+          "durationMs": 3259,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário bloqueado",
+          "status": "passed",
+          "durationMs": 3923,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Fechar a mensagem de erro",
+          "status": "passed",
+          "durationMs": 3787,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /inventory.html sem login",
+          "status": "passed",
+          "durationMs": 3414,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /cart.html sem login",
+          "status": "passed",
+          "durationMs": 2955,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-step-one.html sem login",
+          "status": "passed",
+          "durationMs": 2921,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Navegar do login até o formulário de dados do comprador",
+          "status": "passed",
+          "durationMs": 4019.9999999999995,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Enviar o formulário com dados válidos avança para a revisão do pedido",
+          "status": "passed",
+          "durationMs": 4086.9999999999995,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com nome em branco",
+          "status": "passed",
+          "durationMs": 4359,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com sobrenome em branco",
+          "status": "passed",
+          "durationMs": 4347,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com CEP em branco",
+          "status": "passed",
+          "durationMs": 4731,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com todos em branco",
+          "status": "passed",
+          "durationMs": 4050,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "status": "passed",
+      "durationMs": 94316,
+      "evidence": 0
+    },
+    {
+      "id": "mobile-pixel-7",
+      "job": "mobile",
+      "layer": "Mobile",
+      "app": "SauceDemo",
+      "tool": "Playwright + playwright-bdd (TypeScript)",
+      "target": "Android · Pixel 7",
+      "format": "junit",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Exibir a tela de login",
+          "status": "passed",
+          "durationMs": 2195,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login com credenciais válidas",
+          "status": "passed",
+          "durationMs": 2647,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login submetendo o formulário com a tecla Enter",
+          "status": "passed",
+          "durationMs": 2166,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Logout após login com sucesso",
+          "status": "passed",
+          "durationMs": 2947,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário e senha em branco",
+          "status": "passed",
+          "durationMs": 1724,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em branco",
+          "status": "passed",
+          "durationMs": 1732,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em branco",
+          "status": "passed",
+          "durationMs": 1580,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha incorreta",
+          "status": "passed",
+          "durationMs": 1585,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário inexistente",
+          "status": "passed",
+          "durationMs": 1586,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em caixa alta",
+          "status": "passed",
+          "durationMs": 1635,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em caixa alta",
+          "status": "passed",
+          "durationMs": 1553,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário com espaços",
+          "status": "passed",
+          "durationMs": 1567,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com injeção de SQL",
+          "status": "passed",
+          "durationMs": 1564,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário bloqueado",
+          "status": "passed",
+          "durationMs": 1742,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Fechar a mensagem de erro",
+          "status": "passed",
+          "durationMs": 1710,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /inventory.html sem login",
+          "status": "passed",
+          "durationMs": 1393,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /cart.html sem login",
+          "status": "passed",
+          "durationMs": 1355,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-step-one.html sem login",
+          "status": "passed",
+          "durationMs": 1367,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Navegar do login até o formulário de dados do comprador",
+          "status": "passed",
+          "durationMs": 2050,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Enviar o formulário com dados válidos avança para a revisão do pedido",
+          "status": "passed",
+          "durationMs": 1872,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com nome em branco",
+          "status": "passed",
+          "durationMs": 1863,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com sobrenome em branco",
+          "status": "passed",
+          "durationMs": 2021.9999999999998,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com CEP em branco",
+          "status": "passed",
+          "durationMs": 1804,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com todos em branco",
+          "status": "passed",
+          "durationMs": 1798,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "status": "passed",
+      "durationMs": 43457,
+      "evidence": 0
+    },
+    {
+      "id": "mobile-iphone-15",
+      "job": "mobile",
+      "layer": "Mobile",
+      "app": "SauceDemo",
+      "tool": "Playwright + playwright-bdd (TypeScript)",
+      "target": "iOS · iPhone 15",
+      "format": "junit",
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Exibir a tela de login",
+          "status": "passed",
+          "durationMs": 2732,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login com credenciais válidas",
+          "status": "passed",
+          "durationMs": 3224,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Login submetendo o formulário com a tecla Enter",
+          "status": "passed",
+          "durationMs": 2142,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Logout após login com sucesso",
+          "status": "passed",
+          "durationMs": 3098,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário e senha em branco",
+          "status": "passed",
+          "durationMs": 1793,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em branco",
+          "status": "passed",
+          "durationMs": 1793,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em branco",
+          "status": "passed",
+          "durationMs": 1765,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha incorreta",
+          "status": "passed",
+          "durationMs": 1944,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário inexistente",
+          "status": "passed",
+          "durationMs": 2295,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário em caixa alta",
+          "status": "passed",
+          "durationMs": 1975,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com senha em caixa alta",
+          "status": "passed",
+          "durationMs": 1948,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário com espaços",
+          "status": "passed",
+          "durationMs": 2219,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com injeção de SQL",
+          "status": "passed",
+          "durationMs": 2352,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Não permitir login com usuário bloqueado",
+          "status": "passed",
+          "durationMs": 2093,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Fechar a mensagem de erro",
+          "status": "passed",
+          "durationMs": 1879,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /inventory.html sem login",
+          "status": "passed",
+          "durationMs": 2012,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /cart.html sem login",
+          "status": "passed",
+          "durationMs": 2001,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Login no SauceDemo",
+          "name": "Bloquear acesso direto a /checkout-step-one.html sem login",
+          "status": "passed",
+          "durationMs": 2052,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Navegar do login até o formulário de dados do comprador",
+          "status": "passed",
+          "durationMs": 2820,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Enviar o formulário com dados válidos avança para a revisão do pedido",
+          "status": "passed",
+          "durationMs": 2503,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com nome em branco",
+          "status": "passed",
+          "durationMs": 2414,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com sobrenome em branco",
+          "status": "passed",
+          "durationMs": 2401,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com CEP em branco",
+          "status": "passed",
+          "durationMs": 2400,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Navegação após o login até o formulário do comprador",
+          "name": "Formulário do comprador com todos em branco",
+          "status": "passed",
+          "durationMs": 2395,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "status": "passed",
+      "durationMs": 54250,
+      "evidence": 0
+    },
+    {
+      "id": "performance-k6",
+      "job": "performance",
+      "layer": "Performance",
+      "app": "Restful-Booker",
+      "tool": "k6",
+      "format": "k6",
+      "jobResult": "success",
+      "found": true,
+      "k6": {
+        "profile": "smoke",
+        "testRunDurationMs": 32049.782,
+        "requests": 30,
+        "rps": 0.9360438083479008,
+        "errorRate": 0,
+        "checksPassed": 116,
+        "checksFailed": 0,
+        "iterations": 29,
+        "vusMax": 2,
+        "dataReceived": 882417,
+        "latency": {
+          "avg": 260.2398666666667,
+          "med": 143.93900000000002,
+          "p90": 425.3342,
+          "p95": 426.5674,
+          "p99": 428.52272,
+          "max": 428.967
+        },
+        "thresholds": [
+          {
+            "metric": "http_req_duration",
+            "expression": "p(95)<2000",
+            "ok": true
+          },
+          {
+            "metric": "http_req_duration",
+            "expression": "p(99)<4000",
+            "ok": true
+          },
+          {
+            "metric": "http_req_duration{endpoint:filter_name}",
+            "expression": "p(95)<1500",
+            "ok": true
+          },
+          {
+            "metric": "http_req_duration{endpoint:list_all}",
+            "expression": "p(95)<2500",
+            "ok": true
+          },
+          {
+            "metric": "functional_errors",
+            "expression": "rate<0.20",
+            "ok": true
+          },
+          {
+            "metric": "http_req_duration{endpoint:filter_dates}",
+            "expression": "p(95)<1500",
+            "ok": true
+          },
+          {
+            "metric": "http_req_failed",
+            "expression": "rate<0.01",
+            "ok": true
+          },
+          {
+            "metric": "checks",
+            "expression": "rate>0.99",
+            "ok": true
+          }
+        ]
+      },
+      "cases": [
+        {
+          "feature": "Thresholds",
+          "name": "http_req_duration: p(95)<2000",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Thresholds",
+          "name": "http_req_duration: p(99)<4000",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Thresholds",
+          "name": "http_req_duration{endpoint:filter_name}: p(95)<1500",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Thresholds",
+          "name": "http_req_duration{endpoint:list_all}: p(95)<2500",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Thresholds",
+          "name": "functional_errors: rate<0.20",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Thresholds",
+          "name": "http_req_duration{endpoint:filter_dates}: p(95)<1500",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Thresholds",
+          "name": "http_req_failed: rate<0.01",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Thresholds",
+          "name": "checks: rate>0.99",
+          "status": "passed",
+          "durationMs": 0,
+          "error": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "status": "passed",
+      "durationMs": 32049.782,
+      "totals": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "id": "known-bugs-api-cypress",
+      "job": "known-bugs-api-cypress",
+      "layer": "API",
+      "app": "Restful-Booker",
+      "tool": "Cypress + Cucumber",
+      "format": "cucumber",
+      "knownBugs": true,
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva sem o campo obrigatório firstname deveria retornar 400",
+          "status": "failed",
+          "durationMs": 280,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva sem o campo obrigatório lastname deveria retornar 400",
+          "status": "failed",
+          "durationMs": 247,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva sem o campo obrigatório totalprice deveria retornar 400",
+          "status": "failed",
+          "durationMs": 237,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva sem o campo obrigatório depositpaid deveria retornar 400",
+          "status": "failed",
+          "durationMs": 242,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva sem o campo obrigatório bookingdates deveria retornar 400",
+          "status": "failed",
+          "durationMs": 240,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva sem o campo obrigatório bookingdates.checkin deveria retornar 400",
+          "status": "failed",
+          "durationMs": 250,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva sem o campo obrigatório bookingdates.checkout deveria retornar 400",
+          "status": "failed",
+          "durationMs": 308,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva com corpo vazio deveria retornar 400",
+          "status": "failed",
+          "durationMs": 274,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva com totalprice de tipo inválido deveria retornar 400",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva com depositpaid de tipo inválido deveria retornar 400",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva com firstname de tipo inválido deveria retornar 400",
+          "status": "failed",
+          "durationMs": 276,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Criação de reserva (POST /booking)",
+          "name": "[BUG] Criar reserva com bookingdates de tipo inválido deveria retornar 400",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@post",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Exclusão de reserva (DELETE /booking/:id)",
+          "name": "[BUG] Excluir reserva inexistente deveria retornar 404",
+          "status": "failed",
+          "durationMs": 609,
+          "error": "status code: expected 405 to equal 404",
+          "failedStep": "Então o status code da resposta deve ser 404",
+          "tags": [
+            "@booking",
+            "@delete",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Exclusão de reserva (DELETE /booking/:id)",
+          "name": "[BUG] Excluir reserva já excluída deveria retornar 404",
+          "status": "skipped",
+          "durationMs": 185,
+          "error": "",
+          "failedStep": "",
+          "tags": [
+            "@booking",
+            "@delete",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "[BUG] Filtro com data em formato inválido deveria retornar 400",
+          "status": "failed",
+          "durationMs": 247,
+          "error": "status code: expected 500 to equal 400",
+          "failedStep": "Então o status code da resposta deve ser 400",
+          "tags": [
+            "@booking",
+            "@get",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "[BUG] Filtro de checkin deveria incluir a data informada (>=)",
+          "status": "failed",
+          "durationMs": 427,
+          "error": "expected [] to include 3604",
+          "failedStep": "Então a lista deve conter a reserva cadastrada",
+          "tags": [
+            "@booking",
+            "@get",
+            "@bug"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "[BUG] Filtro de checkout deveria retornar checkouts posteriores à data informada (>=)",
+          "status": "failed",
+          "durationMs": 771,
+          "error": "expected [ Array(2447) ] to include 3624",
+          "failedStep": "Então a lista deve conter a reserva cadastrada",
+          "tags": [
+            "@booking",
+            "@get",
+            "@bug"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Consulta de reservas (GET /booking e GET /booking/:id)",
+          "name": "[BUG] Resposta XML deveria ter content-type application/xml",
+          "status": "failed",
+          "durationMs": 449,
+          "error": "content-type: expected 'text/html; charset=utf-8' to include 'application/xml'",
+          "failedStep": "Então o header \"content-type\" deve conter \"application/xml\"",
+          "tags": [
+            "@booking",
+            "@get",
+            "@bug"
+          ],
+          "evidence": 0
+        },
+        {
+          "feature": "Atualização de reserva (PUT /booking/:id)",
+          "name": "[BUG] Atualizar reserva inexistente deveria retornar 404",
+          "status": "failed",
+          "durationMs": 617,
+          "error": "status code: expected 405 to equal 404",
+          "failedStep": "Então o status code da resposta deve ser 404",
+          "tags": [
+            "@booking",
+            "@put",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 19,
+        "passed": 0,
+        "failed": 15,
+        "skipped": 4
+      },
+      "status": "failed",
+      "durationMs": 5659,
+      "evidence": 0
+    },
+    {
+      "id": "known-bugs-api-rest-assured",
+      "job": "known-bugs-api-rest-assured",
+      "layer": "API",
+      "app": "Restful-Booker",
+      "tool": "Java 21 + Rest Assured + Cucumber",
+      "format": "junit",
+      "knownBugs": true,
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Validar contrato da resposta de sucesso",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Gerar token com credenciais válidas",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Validar headers da resposta de sucesso",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Gerar token ignorando campos adicionais no corpo",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Gerar token enviando credenciais como formulário",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Cada solicitação gera um token diferente",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Token gerado autoriza operação protegida",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Rejeitar corpo com JSON malformado",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Token inválido não autoriza operação protegida",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Autenticação - Criação de token (POST /auth)",
+          "name": "Credenciais inválidas deveriam retornar 401 Unauthorized",
+          "status": "failed",
+          "durationMs": 4497,
+          "error": "[status code] expected: 401 but was: 200",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.3",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.3",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.3",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.13",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.2",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.1",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.12",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.4",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.4",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.11",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.10",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.9",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.8",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.7",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.5",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        },
+        {
+          "feature": "Exemplos",
+          "name": "Example #1.6",
+          "status": "skipped",
+          "durationMs": 0,
+          "error": "",
+          "failedStep": "",
+          "tags": [],
+          "evidence": 0
+        }
+      ],
+      "totals": {
+        "total": 32,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 31
+      },
+      "status": "failed",
+      "durationMs": 4497,
+      "evidence": 0
+    },
+    {
+      "id": "known-bugs-e2e-cypress",
+      "job": "known-bugs-e2e-cypress",
+      "layer": "E2E",
+      "app": "SauceDemo",
+      "tool": "Cypress + Cucumber",
+      "format": "cucumber",
+      "knownBugs": true,
+      "jobResult": "success",
+      "found": true,
+      "cases": [
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "[BUG] Checkout não deveria ser permitido com o carrinho vazio",
+          "status": "failed",
+          "durationMs": 11644,
+          "error": "Timed out retrying after 10000ms: expected '<button#checkout.btn.btn_action.btn_medium.checkout_button.>' to be 'disabled'",
+          "failedStep": "E o botão de checkout deve estar desabilitado",
+          "tags": [
+            "@checkout",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "[BUG] Não deveria avançar no checkout com campos com apenas espaços",
+          "status": "failed",
+          "durationMs": 13340,
+          "error": "Timed out retrying after 10000ms: expected '/checkout-step-two.html' to equal '/checkout-step-one.html'",
+          "failedStep": "Então devo permanecer na etapa de informações do comprador",
+          "tags": [
+            "@checkout",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "[BUG] Não deveria avançar no checkout com CEP com caracteres especiais",
+          "status": "failed",
+          "durationMs": 14200,
+          "error": "Timed out retrying after 10000ms: expected '/checkout-step-two.html' to equal '/checkout-step-one.html'",
+          "failedStep": "Então devo permanecer na etapa de informações do comprador",
+          "tags": [
+            "@checkout",
+            "@bug",
+            "@negative"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "[BUG] problem_user deveria concluir uma compra com dados válidos",
+          "status": "failed",
+          "durationMs": 13541,
+          "error": "Timed out retrying after 10000ms: expected '<input#first-name.input_error.form_input>' to have value 'Maria', but the value was 'a'",
+          "failedStep": "Então os dados do comprador devem estar preenchidos com \"cliente válido\"",
+          "tags": [
+            "@checkout",
+            "@bug"
+          ],
+          "evidence": 1
+        },
+        {
+          "feature": "Checkout de compra no SauceDemo",
+          "name": "[BUG] error_user deveria concluir uma compra com dados válidos",
+          "status": "failed",
+          "durationMs": 2927,
+          "error": "The following error originated from your application code, not from Cypress. > Cannot read properties of undefined (reading 'value') When Cypress detects uncaught errors originating from your application it will automat…",
+          "failedStep": "Quando eu preencho os dados do comprador com \"cliente válido\"",
+          "tags": [
+            "@checkout",
+            "@bug"
+          ],
+          "evidence": 1
+        }
+      ],
+      "totals": {
+        "total": 5,
+        "passed": 0,
+        "failed": 5,
+        "skipped": 0
+      },
+      "status": "failed",
+      "durationMs": 55652,
+      "evidence": 5
+    }
+  ]
+}

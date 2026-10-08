@@ -1,0 +1,296 @@
+name: CI - Pipeline de Qualidade
+
+# Executa os testes de API, E2E, mobile e performance a cada commit (push), em pull requests,
+# diariamente (para detectar mudanças nas aplicações públicas) e sob demanda.
+on:
+  push:
+  pull_request:
+  schedule:
+    # 06:00 BRT
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      k6_profile:
+        description: "Perfil do k6 (smoke = validação rápida; load = 500 VUs por 5 min)"
+        type: choice
+        options: [smoke, load]
+        default: smoke
+      known_bugs:
+        description: "Executar os cenários de defeitos conhecidos (@bug)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# Um novo commit na mesma branch cancela a execução anterior, que ficou obsoleta.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22
+  JAVA_VERSION: 21
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Estágio 1: qualidade estática. Rápido e barato; impede que testes rodem sobre
+  # código que nem compila ou fora do padrão.
+  # ---------------------------------------------------------------------------
+  quality:
+    name: Qualidade · ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: Back-Cypress
+            stack: node
+            check: npm run lint && npx prettier --check .
+          - project: Back-Rest-Assured
+            stack: java
+            check: ./mvnw -B -ntp test-compile
+          - project: Front-Cypress
+            stack: node
+            check: npm run lint && npx prettier --check .
+          - project: Front-PlayWright
+            stack: node
+            check: npm run typecheck && npx eslint . --max-warnings=0 && npm run format:check && npx bddgen
+          - project: K6
+            stack: k6
+            check: k6 inspect -e PROFILE=smoke src/tests/booking-load.test.js > /dev/null
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    env:
+      # Lint não precisa do binário do Cypress.
+      CYPRESS_INSTALL_BINARY: 0
+    steps:
+      - uses: actions/checkout@v4
+
+      - if: matrix.stack == 'node'
+        uses: ./.github/actions/setup-node-project
+        with:
+          working-directory: ${{ matrix.project }}
+
+      - if: matrix.stack == 'java'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+          cache-dependency-path: Back-Rest-Assured/pom.xml
+
+      - if: matrix.stack == 'k6'
+        uses: grafana/setup-k6-action@v1
+
+      - name: Lint, tipos e compilação
+        run: ${{ matrix.check }}
+
+  # ---------------------------------------------------------------------------
+  # Estágio 2: testes funcionais, em paralelo (API, E2E e mobile).
+  # ---------------------------------------------------------------------------
+  api-cypress:
+    name: API · Cypress
+    needs: quality
+    uses: ./.github/workflows/cypress-tests.yml
+    with:
+      suite: api-cypress
+      name: Restful-Booker (Cypress + Cucumber)
+      working-directory: Back-Cypress
+      base-url: ${{ vars.RESTFUL_BOOKER_URL || 'https://restful-booker.herokuapp.com' }}
+    secrets: inherit
+
+  api-rest-assured:
+    name: API · Rest Assured
+    needs: quality
+    uses: ./.github/workflows/rest-assured-tests.yml
+    with:
+      suite: api-rest-assured
+      name: Restful-Booker (Java + Rest Assured)
+      base-url: ${{ vars.RESTFUL_BOOKER_URL || 'https://restful-booker.herokuapp.com' }}
+    secrets: inherit
+
+  e2e-cypress:
+    name: E2E · Cypress
+    needs: quality
+    uses: ./.github/workflows/cypress-tests.yml
+    with:
+      suite: e2e-cypress
+      name: SauceDemo (Cypress + Cucumber)
+      working-directory: Front-Cypress
+      base-url: ${{ vars.SAUCEDEMO_URL || 'https://www.saucedemo.com' }}
+    secrets: inherit
+
+  e2e-playwright:
+    name: E2E · Playwright
+    needs: quality
+    uses: ./.github/workflows/playwright-tests.yml
+    with:
+      layer: E2E
+      base-url: ${{ vars.SAUCEDEMO_URL || 'https://www.saucedemo.com' }}
+      matrix: >-
+        [
+          { "suite": "e2e-playwright-chromium", "project": "chromium", "browser": "chromium", "label": "Chromium" },
+          { "suite": "e2e-playwright-firefox", "project": "firefox", "browser": "firefox", "label": "Firefox" },
+          { "suite": "e2e-playwright-webkit", "project": "webkit", "browser": "webkit", "label": "WebKit" }
+        ]
+    secrets: inherit
+
+  mobile:
+    name: Mobile · Playwright
+    needs: quality
+    uses: ./.github/workflows/playwright-tests.yml
+    with:
+      layer: Mobile
+      base-url: ${{ vars.SAUCEDEMO_URL || 'https://www.saucedemo.com' }}
+      matrix: >-
+        [
+          { "suite": "mobile-pixel-7", "project": "mobile-chrome", "browser": "chromium", "label": "Android (Pixel 7)" },
+          { "suite": "mobile-iphone-15", "project": "mobile-safari", "browser": "webkit", "label": "iOS (iPhone 15)" }
+        ]
+    secrets: inherit
+
+  # ---------------------------------------------------------------------------
+  # Estágio 3: performance. Só roda se a API estiver funcionalmente correta.
+  # A cada commit roda o smoke (2 VUs por 30 s); a carga de 500 VUs é manual.
+  # ---------------------------------------------------------------------------
+  performance:
+    name: Performance · k6 (${{ inputs.k6_profile || 'smoke' }})
+    needs: [api-cypress, api-rest-assured]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: K6
+    env:
+      PROFILE: ${{ inputs.k6_profile || 'smoke' }}
+      BASE_URL: ${{ vars.RESTFUL_BOOKER_URL || 'https://restful-booker.herokuapp.com' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: grafana/setup-k6-action@v1
+
+      - name: Executar k6
+        run: k6 run -e PROFILE="$PROFILE" -e BASE_URL="$BASE_URL" src/tests/booking-load.test.js
+        env:
+          K6_WEB_DASHBOARD: "true"
+          K6_WEB_DASHBOARD_EXPORT: reports/${{ env.PROFILE }}-dashboard.html
+
+      - name: Publicar resultados
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-performance-k6
+          path: K6/reports/${{ env.PROFILE }}-*
+          if-no-files-found: warn
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------
+  # Defeitos conhecidos (@bug): verificam o comportamento correto e falham enquanto
+  # as aplicações não forem corrigidas. Geram evidências, mas não reprovam o pipeline.
+  # ---------------------------------------------------------------------------
+  known-bugs-api-cypress:
+    name: Defeitos conhecidos · API Cypress
+    needs: quality
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.known_bugs }}
+    uses: ./.github/workflows/cypress-tests.yml
+    with:
+      suite: known-bugs-api-cypress
+      name: Restful-Booker @bug (falhas esperadas)
+      working-directory: Back-Cypress
+      tags: "@bug"
+      base-url: ${{ vars.RESTFUL_BOOKER_URL || 'https://restful-booker.herokuapp.com' }}
+      allow-failure: true
+    secrets: inherit
+
+  known-bugs-api-rest-assured:
+    name: Defeitos conhecidos · API Rest Assured
+    needs: quality
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.known_bugs }}
+    uses: ./.github/workflows/rest-assured-tests.yml
+    with:
+      suite: known-bugs-api-rest-assured
+      name: Restful-Booker @bug (falhas esperadas)
+      tags: "@bug"
+      base-url: ${{ vars.RESTFUL_BOOKER_URL || 'https://restful-booker.herokuapp.com' }}
+      allow-failure: true
+    secrets: inherit
+
+  known-bugs-e2e-cypress:
+    name: Defeitos conhecidos · E2E Cypress
+    needs: quality
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.known_bugs }}
+    uses: ./.github/workflows/cypress-tests.yml
+    with:
+      suite: known-bugs-e2e-cypress
+      name: SauceDemo @bug (falhas esperadas)
+      working-directory: Front-Cypress
+      tags: "@bug"
+      base-url: ${{ vars.SAUCEDEMO_URL || 'https://www.saucedemo.com' }}
+      allow-failure: true
+    secrets: inherit
+
+  # ---------------------------------------------------------------------------
+  # Estágio 4: relatório consolidado (Markdown, HTML e PDF) e quality gate.
+  # ---------------------------------------------------------------------------
+  report:
+    name: Relatório consolidado e quality gate
+    needs:
+      - quality
+      - api-cypress
+      - api-rest-assured
+      - e2e-cypress
+      - e2e-playwright
+      - mobile
+      - performance
+      - known-bugs-api-cypress
+      - known-bugs-api-rest-assured
+      - known-bugs-e2e-cypress
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node-project
+        with:
+          working-directory: ci
+
+      - name: Instalar Chromium (geração do PDF)
+        working-directory: ci
+        run: npx playwright install --with-deps chromium
+
+      - name: Baixar resultados de todos os jobs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          path: ci/pipeline-results
+
+      - name: Consolidar resultados
+        working-directory: ci
+        run: node consolidate-report.mjs --input pipeline-results --output pipeline-report
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Resumo na página da execução
+        run: cat ci/pipeline-report/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Gerar PDF
+        working-directory: ci
+        run: node html-to-pdf.mjs pipeline-report/report.html pipeline-report/relatorio-pipeline.pdf
+
+      - name: Publicar relatório consolidado
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-report-${{ github.run_number }}
+          path: ci/pipeline-report/
+          retention-days: 30
+
+      # Reprova o pipeline se algum job bloqueante falhou. Os defeitos conhecidos não entram.
+      - name: Quality gate
+        run: |
+          echo "Quality gate: $(cat ci/pipeline-report/gate.txt)"
+          test "$(cat ci/pipeline-report/gate.txt)" = "aprovado"

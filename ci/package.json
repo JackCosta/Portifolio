@@ -1,0 +1,15 @@
+{
+  "name": "portifolio-ci",
+  "version": "1.0.0",
+  "description": "Scripts do pipeline de CI/CD: consolidação dos resultados e geração do relatório em HTML e PDF",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pipeline:local": "bash run-local.sh",
+    "report": "node consolidate-report.mjs --input pipeline-results --output pipeline-report",
+    "report:pdf": "node html-to-pdf.mjs pipeline-report/report.html pipeline-report/relatorio-pipeline.pdf"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

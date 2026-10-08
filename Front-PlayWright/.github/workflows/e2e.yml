@@ -71,6 +71,8 @@ jobs:
             browser: webkit
           - project: mobile-chrome
             browser: chromium
+          - project: mobile-safari
+            browser: webkit
     steps:
       - uses: actions/checkout@v4
 

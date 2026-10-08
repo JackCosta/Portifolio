@@ -1,0 +1,73 @@
+name: Cypress (reutilizável)
+
+on:
+  workflow_call:
+    inputs:
+      suite:
+        description: Identificador da suíte (nome do artefato de resultados)
+        required: true
+        type: string
+      name:
+        description: Nome exibido do job
+        required: true
+        type: string
+      working-directory:
+        required: true
+        type: string
+      tags:
+        description: Expressão de tags Cucumber
+        required: false
+        type: string
+        default: "not @bug"
+      base-url:
+        required: true
+        type: string
+      allow-failure:
+        description: Não reprova o pipeline (usado nos defeitos conhecidos)
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  cypress:
+    name: ${{ inputs.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    continue-on-error: ${{ inputs.allow-failure }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node-project
+        with:
+          working-directory: ${{ inputs.working-directory }}
+          cypress-cache: "true"
+
+      - run: npx cypress verify
+
+      - name: Executar testes
+        # Inputs passados por variável de ambiente para evitar injeção de comandos no shell.
+        # Nos defeitos conhecidos a retentativa é desligada: a falha é esperada.
+        run: npx cypress run --expose tags="$TAGS" ${NO_RETRIES:+--config retries=0}
+        env:
+          TAGS: ${{ inputs.tags }}
+          NO_RETRIES: ${{ inputs.allow-failure && 'true' || '' }}
+          BASE_URL: ${{ inputs.base-url }}
+          CYPRESS_AUTH_USERNAME: ${{ secrets.AUTH_USERNAME || 'admin' }}
+          CYPRESS_AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD || 'password123' }}
+          CYPRESS_LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME || 'standard_user' }}
+          CYPRESS_LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD || 'secret_sauce' }}
+
+      - name: Publicar resultados e evidências
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ inputs.suite }}
+          path: ${{ inputs.working-directory }}/reports/
+          if-no-files-found: warn
+          retention-days: 14

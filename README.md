@@ -25,7 +25,7 @@ Os projetos seguem os mesmos princípios:
 - **Arquitetura em camadas** (Page Objects e Service Objects)
 - **Massa de dados separada** do código
 - **Relatórios com evidências**
-- **Pipelines de CI/CD** no GitHub Actions
+- **Pipeline de CI/CD** único no GitHub Actions, com relatório consolidado
 
 | Projeto                                      | Camada      | Aplicação     | Stack                                   |
 | -------------------------------------------- | ----------- | ------------- | --------------------------------------- |
@@ -104,6 +104,23 @@ documentação.
 3. Instabilidade do ambiente compartilhado
 
 Para cada gargalo, o [relatório](K6/reports/RELATORIO.md) traz recomendações técnicas.
+
+## Pipeline de CI/CD
+
+Um pipeline único no GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) executa os cinco
+projetos **a cada commit**, em pull requests, diariamente e sob demanda:
+
+1. **Qualidade**: lint, formatação, tipos, compilação Java e validação do script k6.
+2. **API, E2E e mobile, em paralelo**:
+   - API com Cypress e Rest Assured;
+   - E2E com Cypress e Playwright (Chromium, Firefox e WebKit);
+   - mobile web com Playwright no Pixel 7 (Android) e no iPhone 15 (iOS).
+3. **Performance**: smoke do k6, executado só se a API passar.
+4. **Relatório consolidado** em Markdown, HTML e PDF, seguido do **quality gate**.
+
+Os defeitos conhecidos (`@bug`) rodam em jobs separados, que não reprovam o pipeline, e aparecem no relatório
+como falhas esperadas. Detalhes em [ci/README.md](ci/README.md). O relatório da última execução está em
+[ci/pipeline-report/relatorio-pipeline.pdf](ci/pipeline-report/relatorio-pipeline.pdf).
 
 ## O que este portfólio demonstra
 

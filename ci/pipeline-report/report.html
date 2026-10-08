@@ -1,0 +1,1266 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatório do Pipeline de Qualidade</title>
+<style>
+  :root { --ink:#1f2328; --muted:#636c76; --line:#d8dee4; --soft:#f6f8fa; --ok:#1a7f37; --ok-bg:#dafbe1;
+          --bad:#cf222e; --bad-bg:#ffebe9; --warn:#9a6700; --warn-bg:#fff8c5; --accent:#0969da; }
+  @page { size: A4; margin: 16mm 14mm 18mm; }
+  * { box-sizing: border-box; }
+  body { font: 10.5pt/1.45 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); margin: 0 auto; max-width: 1000px; padding: 24px; background: #fff; }
+  @media print { body { padding: 0; max-width: none; } }
+  h1 { font-size: 21pt; margin: 0 0 4px; }
+  h2 { font-size: 14pt; margin: 26px 0 10px; padding-bottom: 4px; border-bottom: 2px solid var(--ink); break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 18px 0 6px; break-after: avoid; }
+  h4 { font-size: 10pt; margin: 12px 0 4px; color: var(--muted); break-after: avoid; }
+  p { margin: 6px 0; }
+  code { font: 9pt ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--soft); padding: 1px 4px; border-radius: 4px; }
+  a { color: var(--accent); }
+  .cover { border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin-bottom: 8px; }
+  .subtitle { color: var(--muted); margin-bottom: 14px; }
+  .gate { display: inline-block; font-weight: 700; font-size: 12pt; padding: 6px 14px; border-radius: 999px; margin-bottom: 12px; }
+  .gate.aprovado { background: var(--ok-bg); color: var(--ok); }
+  .gate.reprovado { background: var(--bad-bg); color: var(--bad); }
+  .meta { display: grid; grid-template-columns: 120px 1fr; gap: 3px 12px; font-size: 9.5pt; }
+  .meta dt { color: var(--muted); }
+  .meta dd { margin: 0; overflow-wrap: anywhere; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 8px; margin: 12px 0; }
+  .kpi { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; break-inside: avoid; }
+  .kpi-value { font-size: 16pt; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .kpi-label { color: var(--muted); font-size: 8.5pt; }
+  .kpi.ok .kpi-value { color: var(--ok); } .kpi.bad .kpi-value { color: var(--bad); } .kpi.warn .kpi-value { color: var(--warn); }
+  ul.summary { margin: 6px 0; padding-left: 18px; } ul.summary li { margin: 3px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 9.5pt; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  th { text-align: left; background: var(--soft); font-weight: 600; }
+  th, td { border-bottom: 1px solid var(--line); padding: 5px 7px; vertical-align: top; }
+  table.compact th, table.compact td { padding: 3px 6px; font-size: 8.8pt; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .center { text-align: center; }
+  .ok { color: var(--ok); } .bad { color: var(--bad); font-weight: 700; } .warn { color: var(--warn); font-weight: 700; }
+  .muted { color: var(--muted); font-size: 8.5pt; }
+  .error { color: var(--bad); font: 8.3pt ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 8.3pt; font-weight: 600; white-space: nowrap; }
+  .badge.passed { background: var(--ok-bg); color: var(--ok); } .badge.failed { background: var(--bad-bg); color: var(--bad); }
+  .badge.skipped { background: var(--soft); color: var(--muted); } .badge.expected { background: var(--warn-bg); color: var(--warn); }
+  .matrix .tick { color: var(--ok); font-weight: 700; } .matrix .cross { color: var(--bad); font-weight: 700; }
+  tr.group td { background: var(--soft); font-weight: 600; font-size: 8.8pt; }
+  tr.total td { font-weight: 700; border-top: 2px solid var(--line); }
+  .flow { display: flex; align-items: center; gap: 6px; margin: 10px 0; break-inside: avoid; }
+  .parallel { display: grid; gap: 6px; flex: 3; }
+  .row { display: flex; align-items: center; gap: 6px; }
+  .stage { border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 6px; padding: 6px 8px; flex: 1; background: #fff; }
+  .stage.muted { border-left-color: var(--warn); }
+  .stage-title { font-weight: 700; font-size: 9pt; }
+  .stage-item { font-size: 8.3pt; color: var(--muted); }
+  .arrow { color: var(--muted); font-size: 14pt; }
+  .note { color: var(--muted); font-size: 9pt; }
+  .empty { color: var(--ok); }
+  .callout { border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 6px; padding: 8px 12px; background: var(--soft); break-inside: avoid; }
+  .page-break { break-before: page; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <h1>Relatório do Pipeline de Qualidade</h1>
+  <div class="subtitle">Testes automatizados de API, E2E, mobile e performance · Portfólio de Quality Engineering</div>
+  <div class="gate aprovado">Quality gate: aprovado</div>
+  <dl class="meta"><dt>Origem</dt><dd>Execução local (ci/run-local.sh)</dd><dt>Ambiente</dt><dd>darwin · Node v24.20.0</dd><dt>Evento</dt><dd>manual (local)</dd><dt>Branch</dt><dd><code>main</code></dd><dt>Commit</dt><dd><code>868f222</code> Create README.md - Portifolio <span class="muted">(com alterações locais não commitadas)</span></dd><dt>Início</dt><dd>-</dd><dt>Fim</dt><dd>08/10/2026, 10:21:27</dd></dl>
+</section>
+
+<h2>1. Resumo executivo</h2>
+<div class="kpis">
+  <div class="kpi "><div class="kpi-value">231</div><div class="kpi-label">cenários funcionais</div></div>
+  <div class="kpi ok"><div class="kpi-value">230</div><div class="kpi-label">aprovados</div></div>
+  <div class="kpi ok"><div class="kpi-value">0</div><div class="kpi-label">falhas inesperadas</div></div>
+  <div class="kpi warn"><div class="kpi-value">21</div><div class="kpi-label">falhas esperadas (@bug)</div></div>
+  <div class="kpi "><div class="kpi-value">100.0%</div><div class="kpi-label">taxa de sucesso</div></div>
+  <div class="kpi "><div class="kpi-value">44</div><div class="kpi-label">prints de evidência</div></div>
+</div>
+<ul class="summary"><li>Todos os 7 jobs bloqueantes terminaram com sucesso, e o <strong>quality gate foi aprovado</strong>.</li><li>230 de 230 cenários funcionais executados passaram (100.0%), distribuídos em 8 suítes de API, E2E e mobile.</li><li>1 cenário(s) ignorado(s): são os cenários <code>@bug</code> excluídos da execução padrão.</li><li>21 falhas esperadas confirmam defeitos conhecidos das aplicações (seção 7). Elas não reprovam o pipeline.</li><li>Performance (perfil smoke): 30 requisições com 0.00% de erro e p95 de 427 ms; 8 de 8 thresholds atendidos.</li></ul>
+
+<h2>2. Como o pipeline funciona</h2>
+<p>O workflow <code>.github/workflows/ci.yml</code> roda a cada <strong>push</strong> (qualquer branch), em <strong>pull requests</strong>,
+diariamente às 06:00 (para detectar mudanças nas aplicações públicas) e sob demanda. Um commit novo na mesma branch cancela a
+execução anterior (<code>concurrency</code>).</p>
+
+  <div class="flow">
+    <div class="stage "><div class="stage-title">1 · Qualidade</div><div class="stage-item">Lint e formatação</div><div class="stage-item">Tipos (TypeScript)</div><div class="stage-item">Compilação (Java)</div><div class="stage-item">Validação do script k6</div></div>
+    <div class="arrow">→</div>
+    <div class="parallel">
+      <div class="row">
+        <div class="stage "><div class="stage-title">2 · API</div><div class="stage-item">Cypress + Cucumber</div><div class="stage-item">Rest Assured (Java)</div></div>
+        <div class="arrow">→</div>
+        <div class="stage "><div class="stage-title">3 · Performance</div><div class="stage-item">k6 smoke a cada commit</div><div class="stage-item">carga 500 VUs sob demanda</div></div>
+      </div>
+      <div class="stage "><div class="stage-title">2 · E2E</div><div class="stage-item">Cypress (Electron)</div><div class="stage-item">Playwright: Chromium, Firefox, WebKit</div></div>
+      <div class="stage "><div class="stage-title">2 · Mobile</div><div class="stage-item">Pixel 7 (Android)</div><div class="stage-item">iPhone 15 (iOS)</div></div>
+      <div class="stage muted"><div class="stage-title">Defeitos conhecidos</div><div class="stage-item">Cenários @bug, não bloqueantes</div></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="stage "><div class="stage-title">4 · Relatório</div><div class="stage-item">Markdown, HTML e PDF</div><div class="stage-item">Quality gate</div></div>
+  </div>
+<ul class="summary">
+  <li><strong>Falha rápida e barata:</strong> o estágio de qualidade (lint, tipos, compilação e validação do script k6) roda antes de qualquer teste.</li>
+  <li><strong>Paralelismo:</strong> API, E2E e mobile rodam ao mesmo tempo; Playwright usa uma matriz com um job por navegador e dispositivo.</li>
+  <li><strong>Reaproveitamento:</strong> três workflows reutilizáveis (Cypress, Rest Assured e Playwright) e uma action composta para projetos Node evitam passos duplicados.</li>
+  <li><strong>Cache:</strong> dependências npm e Maven, binário do Cypress e navegadores do Playwright.</li>
+  <li><strong>Dependência lógica:</strong> a performance só roda se os testes funcionais de API passarem.</li>
+  <li><strong>Defeitos conhecidos:</strong> os cenários <code>@bug</code> rodam em jobs separados e não bloqueantes, gerando evidências sem esconder regressões reais.</li>
+  <li><strong>Segurança:</strong> credenciais via <code>secrets</code>, URLs via <code>vars</code>, permissão mínima (<code>contents: read</code>) e entradas passadas por variável de ambiente.</li>
+  <li><strong>Rastreabilidade:</strong> cada job publica relatórios e evidências como artefato; o job final gera este relatório em Markdown, HTML e PDF e aplica o quality gate.</li>
+</ul>
+
+<h2>3. Resultado por job</h2>
+<table>
+    <thead><tr><th>Estágio</th><th>Job</th><th>Bloqueante</th><th class="num">Duração</th><th>Resultado</th></tr></thead>
+    <tbody><tr><td>1</td><td>Qualidade (lint, tipos, compilação)</td><td>sim</td><td class="num">24.7 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>API · Cypress</td><td>sim</td><td class="num">1 min 35 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>API · Rest Assured</td><td>sim</td><td class="num">27.4 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>E2E · Cypress</td><td>sim</td><td class="num">1 min 42 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>E2E · Playwright (3 navegadores)</td><td>sim</td><td class="num">2 min 22 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>Mobile · Playwright (2 dispositivos)</td><td>sim</td><td class="num">1 min 2 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>3</td><td>Performance · k6</td><td>sim</td><td class="num">33.0 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>Defeitos conhecidos · API Cypress</td><td>não</td><td class="num">44.4 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>Defeitos conhecidos · API Rest Assured</td><td>não</td><td class="num">14.0 s</td><td><span class="badge passed">sucesso</span></td></tr><tr><td>2</td><td>Defeitos conhecidos · E2E Cypress</td><td>não</td><td class="num">2 min 9 s</td><td><span class="badge passed">sucesso</span></td></tr></tbody></table>
+
+<h2>4. Resultado por camada</h2>
+<h3>API</h3><table>
+    <thead><tr><th>Camada</th><th>Ferramenta</th><th>Aplicação</th><th class="num">Total</th><th class="num">Passou</th>
+    <th class="num">Falhou</th><th class="num">Ignorado</th><th class="num">Sucesso</th><th class="num">Tempo*</th><th>Resultado</th></tr></thead>
+    <tbody><tr>
+        <td>API</td>
+        <td>Cypress + Cucumber</td>
+        <td>Restful-Booker</td>
+        <td class="num">50</td>
+        <td class="num ok">50</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">100.0%</td>
+        <td class="num">28.1 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr><tr>
+        <td>API</td>
+        <td>Java 21 + Rest Assured + Cucumber</td>
+        <td>Restful-Booker</td>
+        <td class="num">32</td>
+        <td class="num ok">31</td>
+        <td class="num ">0</td>
+        <td class="num">1</td>
+        <td class="num">100.0%</td>
+        <td class="num">37.3 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr></tbody></table><h3>E2E</h3><table>
+    <thead><tr><th>Camada</th><th>Ferramenta</th><th>Aplicação</th><th class="num">Total</th><th class="num">Passou</th>
+    <th class="num">Falhou</th><th class="num">Ignorado</th><th class="num">Sucesso</th><th class="num">Tempo*</th><th>Resultado</th></tr></thead>
+    <tbody><tr>
+        <td>E2E</td>
+        <td>Cypress + Cucumber<div class="muted">Electron</div></td>
+        <td>SauceDemo</td>
+        <td class="num">29</td>
+        <td class="num ok">29</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">100.0%</td>
+        <td class="num">32.4 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr><tr>
+        <td>E2E</td>
+        <td>Playwright + playwright-bdd (TypeScript)<div class="muted">Chromium</div></td>
+        <td>SauceDemo</td>
+        <td class="num">24</td>
+        <td class="num ok">24</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">100.0%</td>
+        <td class="num">34.0 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr><tr>
+        <td>E2E</td>
+        <td>Playwright + playwright-bdd (TypeScript)<div class="muted">Firefox</div></td>
+        <td>SauceDemo</td>
+        <td class="num">24</td>
+        <td class="num ok">24</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">100.0%</td>
+        <td class="num">1 min 26 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr><tr>
+        <td>E2E</td>
+        <td>Playwright + playwright-bdd (TypeScript)<div class="muted">WebKit</div></td>
+        <td>SauceDemo</td>
+        <td class="num">24</td>
+        <td class="num ok">24</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">100.0%</td>
+        <td class="num">1 min 34 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr></tbody></table><h3>Mobile</h3><table>
+    <thead><tr><th>Camada</th><th>Ferramenta</th><th>Aplicação</th><th class="num">Total</th><th class="num">Passou</th>
+    <th class="num">Falhou</th><th class="num">Ignorado</th><th class="num">Sucesso</th><th class="num">Tempo*</th><th>Resultado</th></tr></thead>
+    <tbody><tr>
+        <td>Mobile</td>
+        <td>Playwright + playwright-bdd (TypeScript)<div class="muted">Android · Pixel 7</div></td>
+        <td>SauceDemo</td>
+        <td class="num">24</td>
+        <td class="num ok">24</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">100.0%</td>
+        <td class="num">43.5 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr><tr>
+        <td>Mobile</td>
+        <td>Playwright + playwright-bdd (TypeScript)<div class="muted">iOS · iPhone 15</div></td>
+        <td>SauceDemo</td>
+        <td class="num">24</td>
+        <td class="num ok">24</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">100.0%</td>
+        <td class="num">54.3 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr></tbody></table><h3>Performance</h3><table>
+    <thead><tr><th>Camada</th><th>Ferramenta</th><th>Aplicação</th><th class="num">Total</th><th class="num">Passou</th>
+    <th class="num">Falhou</th><th class="num">Ignorado</th><th class="num">Sucesso</th><th class="num">Tempo*</th><th>Resultado</th></tr></thead>
+    <tbody><tr>
+        <td>Performance</td>
+        <td>k6</td>
+        <td>Restful-Booker</td>
+        <td class="num">8</td>
+        <td class="num ok">8</td>
+        <td class="num ">0</td>
+        <td class="num">0</td>
+        <td class="num">-</td>
+        <td class="num">32.0 s</td>
+        <td><span class="badge passed">passou</span></td>
+      </tr></tbody></table>
+<p class="note">* Tempo somado dos cenários; com execução paralela o tempo real do job é menor.</p>
+
+<h2 class="page-break">5. Detalhe das execuções</h2>
+<h3>5.1 E2E e Mobile com Playwright: matriz de navegadores e dispositivos</h3>
+<table class="compact matrix">
+    <thead><tr><th>Cenário</th><th class="center">E2E<br>Chromium</th><th class="center">E2E<br>Firefox</th><th class="center">E2E<br>WebKit</th><th class="center">Mobile<br>Android · Pixel 7</th><th class="center">Mobile<br>iOS · iPhone 15</th></tr></thead>
+    <tbody><tr class="group"><td colspan="6">Login no SauceDemo</td></tr><tr><td>Exibir a tela de login</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Login com credenciais válidas</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Login submetendo o formulário com a tecla Enter</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Logout após login com sucesso</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com usuário e senha em branco</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com usuário em branco</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com senha em branco</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com senha incorreta</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com usuário inexistente</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com usuário em caixa alta</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com senha em caixa alta</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com usuário com espaços</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com injeção de SQL</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Não permitir login com usuário bloqueado</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Fechar a mensagem de erro</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Bloquear acesso direto a /inventory.html sem login</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Bloquear acesso direto a /cart.html sem login</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Bloquear acesso direto a /checkout-step-one.html sem login</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr class="group"><td colspan="6">Navegação após o login até o formulário do comprador</td></tr><tr><td>Navegar do login até o formulário de dados do comprador</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Enviar o formulário com dados válidos avança para a revisão do pedido</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Formulário do comprador com nome em branco</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Formulário do comprador com sobrenome em branco</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Formulário do comprador com CEP em branco</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr><td>Formulário do comprador com todos em branco</td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td><td class="center"><span class="tick">✓</span></td></tr><tr class="total"><td>Total aprovado</td><td class="center">24/24</td><td class="center">24/24</td><td class="center">24/24</td><td class="center">24/24</td><td class="center">24/24</td></tr></tbody></table>
+<h3>5.2 API · Cypress + Cucumber (Restful-Booker)</h3>
+      <h4>Autenticação - Criação de token (POST /auth)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Gerar token com credenciais válidas</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Validar contrato da resposta de sucesso</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Cada solicitação gera um token diferente</td>
+              <td class="num">0.4 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não gerar token com senha incorreta</td>
+              <td class="num">0.4 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não gerar token com usuário inexistente</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não gerar token com credenciais em branco</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não gerar token com usuário em caixa alta</td>
+              <td class="num">0.4 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não gerar token com senha ausente</td>
+              <td class="num">0.4 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não gerar token com usuário ausente</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não gerar token com corpo vazio</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar corpo com JSON malformado</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Token gerado autoriza operação protegida</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Token inválido não autoriza operação protegida</td>
+              <td class="num">0.6 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Criação de reserva (POST /booking)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Criar reserva com dados válidos</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Criar reserva sem o campo opcional additionalneeds</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar corpo com JSON malformado</td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar header Accept não suportado</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Exclusão de reserva (DELETE /booking/:id)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Excluir reserva autenticando via cookie com token</td>
+              <td class="num">1.1 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Excluir reserva autenticando via header Authorization (Basic)</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar exclusão com autenticação ausente</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar exclusão com token inválido</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar exclusão com credenciais Basic erradas</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Consulta de reservas (GET /booking e GET /booking/:id)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Listar todas as reservas</td>
+              <td class="num">0.4 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Filtrar reservas por nome e sobrenome</td>
+              <td class="num">0.7 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Filtrar reservas por data de checkin anterior à da reserva</td>
+              <td class="num">0.6 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Filtrar reservas por data de checkout igual à da reserva</td>
+              <td class="num">0.6 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Filtro sem correspondência retorna lista vazia</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Consultar uma reserva pelo ID</td>
+              <td class="num">0.7 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Consultar uma reserva no formato XML</td>
+              <td class="num">0.6 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Consultar reserva com ID inexistente</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Consultar reserva com ID não numérico</td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Consultar reserva com ID negativo</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Métodos HTTP não suportados</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Consultar os métodos permitidos na coleção de reservas</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar PUT em /booking</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar PATCH em /booking</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar DELETE em /booking</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar POST em /booking/1</td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar POST em /auth/1</td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar GET em /auth</td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Atualização de reserva (PUT /booking/:id)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Atualizar reserva autenticando via cookie com token</td>
+              <td class="num">1.1 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Atualizar reserva autenticando via header Authorization (Basic)</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização com autenticação ausente</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização com token inválido</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização com credenciais Basic erradas</td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização sem o campo obrigatório firstname</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização sem o campo obrigatório lastname</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização sem o campo obrigatório totalprice</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização sem o campo obrigatório depositpaid</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização sem o campo obrigatório bookingdates</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar atualização com JSON malformado</td>
+              <td class="num">0.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table><h3>5.3 API · Java 21 + Rest Assured + Cucumber (Restful-Booker)</h3>
+      <h4>Autenticação - Criação de token (POST /auth)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Credenciais inválidas deveriam retornar 401 Unauthorized</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Validar headers da resposta de sucesso</td>
+              <td class="num">4.7 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Gerar token com credenciais válidas</td>
+              <td class="num">4.7 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Validar contrato da resposta de sucesso</td>
+              <td class="num">5.1 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Gerar token ignorando campos adicionais no corpo</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Gerar token enviando credenciais como formulário</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Cada solicitação gera um token diferente</td>
+              <td class="num">1.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Token gerado autoriza operação protegida</td>
+              <td class="num">1.4 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Token inválido não autoriza operação protegida</td>
+              <td class="num">6.9 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Rejeitar corpo com JSON malformado</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Exemplos</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Example #1.13</td>
+              <td class="num">0.6 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.3</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.3</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.3</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.12</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.11</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.4</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.4</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.10</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">0.7 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">1.2 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.9</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.8</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.7</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.5</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Example #1.6</td>
+              <td class="num">0.5 s</td>
+              
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table><h3>5.4 E2E · Cypress + Cucumber · Electron (SauceDemo)</h3>
+      <h4>Checkout de compra no SauceDemo</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th class="num">Prints</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Compra completa com dados válidos</td>
+              <td class="num">6.5 s</td>
+              <td class="num">7</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Remover um produto do carrinho recalcula o pedido</td>
+              <td class="num">2.6 s</td>
+              <td class="num">3</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Cancelar na revisão do pedido mantém os produtos no carrinho</td>
+              <td class="num">1.8 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não avançar no checkout com dados incompletos: nome em branco</td>
+              <td class="num">1.6 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não avançar no checkout com dados incompletos: sobrenome em branco</td>
+              <td class="num">1.6 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não avançar no checkout com dados incompletos: CEP em branco</td>
+              <td class="num">1.6 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não avançar no checkout com dados incompletos: todos os campos em branco</td>
+              <td class="num">1.4 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Corrigir os dados após o erro permite concluir a compra</td>
+              <td class="num">2.5 s</td>
+              <td class="num">3</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Cancelar na etapa de informações volta ao carrinho sem perder os produtos</td>
+              <td class="num">0.9 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Bloquear acesso direto a /cart.html sem login</td>
+              <td class="num">0.4 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Bloquear acesso direto a /checkout-step-one.html sem login</td>
+              <td class="num">0.3 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Bloquear acesso direto a /checkout-step-two.html sem login</td>
+              <td class="num">0.3 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Bloquear acesso direto a /checkout-complete.html sem login</td>
+              <td class="num">0.3 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Login no SauceDemo</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th class="num">Prints</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Exibir a tela de login</td>
+              <td class="num">0.4 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Login com credenciais válidas</td>
+              <td class="num">0.9 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Login submetendo o formulário com a tecla Enter</td>
+              <td class="num">0.5 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Logout após login com sucesso</td>
+              <td class="num">1.2 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com usuário e senha em branco</td>
+              <td class="num">0.6 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com usuário em branco</td>
+              <td class="num">0.6 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com senha em branco</td>
+              <td class="num">0.6 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com senha incorreta</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com usuário inexistente</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com usuário em caixa alta</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com senha em caixa alta</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com usuário com espaços</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com injeção de SQL</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Não permitir login com usuário bloqueado</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Fechar a mensagem de erro</td>
+              <td class="num">0.7 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr><tr>
+              <td>Bloquear acesso direto à página de produtos sem login</td>
+              <td class="num">0.3 s</td>
+              <td class="num">1</td>
+              <td><span class="badge passed">passou</span></td>
+            </tr></tbody>
+      </table>
+<h3>5.5 Performance · k6</h3>
+
+    <div class="kpis">
+      <div class="kpi "><div class="kpi-value">30</div><div class="kpi-label">requisições</div></div>
+      <div class="kpi "><div class="kpi-value">0.9</div><div class="kpi-label">requisições/s</div></div>
+      <div class="kpi ok"><div class="kpi-value">0.00%</div><div class="kpi-label">taxa de erro</div></div>
+      <div class="kpi "><div class="kpi-value">427 ms</div><div class="kpi-label">latência p95</div></div>
+      <div class="kpi "><div class="kpi-value">2</div><div class="kpi-label">usuários virtuais</div></div>
+      <div class="kpi "><div class="kpi-value">32.0 s</div><div class="kpi-label">duração</div></div>
+    </div>
+    <table class="compact">
+      <thead><tr><th>Latência (http_req_duration)</th><th class="num">média</th><th class="num">mediana</th><th class="num">p90</th>
+      <th class="num">p95</th><th class="num">p99</th><th class="num">máx.</th></tr></thead>
+      <tbody><tr><td>Todas as requisições</td><td class="num">260 ms</td><td class="num">144 ms</td>
+      <td class="num">425 ms</td><td class="num">427 ms</td><td class="num">429 ms</td>
+      <td class="num">429 ms</td></tr></tbody>
+    </table>
+    <table class="compact">
+      <thead><tr><th>Threshold</th><th>Expressão</th><th>Resultado</th></tr></thead>
+      <tbody><tr><td><code>http_req_duration</code></td><td><code>p(95)&lt;2000</code></td><td><span class="badge passed">passou</span></td></tr><tr><td><code>http_req_duration</code></td><td><code>p(99)&lt;4000</code></td><td><span class="badge passed">passou</span></td></tr><tr><td><code>http_req_duration{endpoint:filter_name}</code></td><td><code>p(95)&lt;1500</code></td><td><span class="badge passed">passou</span></td></tr><tr><td><code>http_req_duration{endpoint:list_all}</code></td><td><code>p(95)&lt;2500</code></td><td><span class="badge passed">passou</span></td></tr><tr><td><code>functional_errors</code></td><td><code>rate&lt;0.20</code></td><td><span class="badge passed">passou</span></td></tr><tr><td><code>http_req_duration{endpoint:filter_dates}</code></td><td><code>p(95)&lt;1500</code></td><td><span class="badge passed">passou</span></td></tr><tr><td><code>http_req_failed</code></td><td><code>rate&lt;0.01</code></td><td><span class="badge passed">passou</span></td></tr><tr><td><code>checks</code></td><td><code>rate&gt;0.99</code></td><td><span class="badge passed">passou</span></td></tr></tbody>
+    </table>
+    <p class="note">Checks: 116 aprovados e 0 reprovados, em 29 iterações.
+    O perfil <strong>smoke</strong> (2 usuários por 30 s) roda a cada commit para validar o script e os thresholds sem gerar carga na API pública. A carga de 500 usuários por 5 minutos é disparada manualmente (<code>workflow_dispatch</code>, perfil <code>load</code>); a análise dessa execução está em <code>K6/reports/RELATORIO.md</code>.</p>
+
+<h2>6. Falhas inesperadas</h2>
+<p class="empty">Nenhuma falha inesperada nesta execução.</p>
+
+<h2>7. Falhas esperadas: defeitos conhecidos (@bug)</h2>
+<p>Estes cenários verificam o comportamento <strong>correto</strong> e falham enquanto as aplicações não forem corrigidas. A falha
+confirma que o defeito continua presente; os relatórios de cada suíte trazem o print ou o request/response do momento da falha.</p>
+<table class="compact">
+    <thead><tr><th>Suíte</th><th>Cenário</th><th>Erro registrado</th></tr></thead>
+    <tbody><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva sem o campo obrigatório firstname deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva sem o campo obrigatório lastname deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva sem o campo obrigatório totalprice deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva sem o campo obrigatório depositpaid deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva sem o campo obrigatório bookingdates deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva sem o campo obrigatório bookingdates.checkin deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva sem o campo obrigatório bookingdates.checkout deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva com corpo vazio deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Criar reserva com firstname de tipo inválido deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Excluir reserva inexistente deveria retornar 404<div class="muted">Passo: Então o status code da resposta deve ser 404</div></td>
+        <td class="error">status code: expected 405 to equal 404</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Filtro com data em formato inválido deveria retornar 400<div class="muted">Passo: Então o status code da resposta deve ser 400</div></td>
+        <td class="error">status code: expected 500 to equal 400</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Filtro de checkin deveria incluir a data informada (&gt;=)<div class="muted">Passo: Então a lista deve conter a reserva cadastrada</div></td>
+        <td class="error">expected [] to include 3604</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Filtro de checkout deveria retornar checkouts posteriores à data informada (&gt;=)<div class="muted">Passo: Então a lista deve conter a reserva cadastrada</div></td>
+        <td class="error">expected [ Array(2447) ] to include 3624</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Resposta XML deveria ter content-type application/xml<div class="muted">Passo: Então o header &quot;content-type&quot; deve conter &quot;application/xml&quot;</div></td>
+        <td class="error">content-type: expected &#39;text/html; charset=utf-8&#39; to include &#39;application/xml&#39;</td></tr><tr><td>Cypress + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>[BUG] Atualizar reserva inexistente deveria retornar 404<div class="muted">Passo: Então o status code da resposta deve ser 404</div></td>
+        <td class="error">status code: expected 405 to equal 404</td></tr><tr><td>Java 21 + Rest Assured + Cucumber<div class="muted">Restful-Booker</div></td>
+        <td>Credenciais inválidas deveriam retornar 401 Unauthorized</td>
+        <td class="error">[status code] expected: 401 but was: 200</td></tr><tr><td>Cypress + Cucumber<div class="muted">SauceDemo</div></td>
+        <td>[BUG] Checkout não deveria ser permitido com o carrinho vazio<div class="muted">Passo: E o botão de checkout deve estar desabilitado</div></td>
+        <td class="error">Timed out retrying after 10000ms: expected &#39;&lt;button#checkout.btn.btn_action.btn_medium.checkout_button.&gt;&#39; to be &#39;disabled&#39;</td></tr><tr><td>Cypress + Cucumber<div class="muted">SauceDemo</div></td>
+        <td>[BUG] Não deveria avançar no checkout com campos com apenas espaços<div class="muted">Passo: Então devo permanecer na etapa de informações do comprador</div></td>
+        <td class="error">Timed out retrying after 10000ms: expected &#39;/checkout-step-two.html&#39; to equal &#39;/checkout-step-one.html&#39;</td></tr><tr><td>Cypress + Cucumber<div class="muted">SauceDemo</div></td>
+        <td>[BUG] Não deveria avançar no checkout com CEP com caracteres especiais<div class="muted">Passo: Então devo permanecer na etapa de informações do comprador</div></td>
+        <td class="error">Timed out retrying after 10000ms: expected &#39;/checkout-step-two.html&#39; to equal &#39;/checkout-step-one.html&#39;</td></tr><tr><td>Cypress + Cucumber<div class="muted">SauceDemo</div></td>
+        <td>[BUG] problem_user deveria concluir uma compra com dados válidos<div class="muted">Passo: Então os dados do comprador devem estar preenchidos com &quot;cliente válido&quot;</div></td>
+        <td class="error">Timed out retrying after 10000ms: expected &#39;&lt;input#first-name.input_error.form_input&gt;&#39; to have value &#39;Maria&#39;, but the value was &#39;a&#39;</td></tr><tr><td>Cypress + Cucumber<div class="muted">SauceDemo</div></td>
+        <td>[BUG] error_user deveria concluir uma compra com dados válidos<div class="muted">Passo: Quando eu preencho os dados do comprador com &quot;cliente válido&quot;</div></td>
+        <td class="error">The following error originated from your application code, not from Cypress. &gt; Cannot read properties of undefined (reading &#39;value&#39;) When Cypress detects uncaught errors originating from your application it will automat…</td></tr></tbody></table>
+
+<h3>Restful-Booker · Cypress + Cucumber</h3>
+      <h4>Criação de reserva (POST /booking)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>[BUG] Criar reserva sem o campo obrigatório firstname deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva sem o campo obrigatório lastname deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva sem o campo obrigatório totalprice deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva sem o campo obrigatório depositpaid deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva sem o campo obrigatório bookingdates deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva sem o campo obrigatório bookingdates.checkin deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva sem o campo obrigatório bookingdates.checkout deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva com corpo vazio deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva com totalprice de tipo inválido deveria retornar 400</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva com depositpaid de tipo inválido deveria retornar 400</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva com firstname de tipo inválido deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.3 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Criar reserva com bookingdates de tipo inválido deveria retornar 400</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Exclusão de reserva (DELETE /booking/:id)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>[BUG] Excluir reserva inexistente deveria retornar 404<div class="error">status code: expected 405 to equal 404</div></td>
+              <td class="num">0.6 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Excluir reserva já excluída deveria retornar 404</td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Consulta de reservas (GET /booking e GET /booking/:id)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>[BUG] Filtro com data em formato inválido deveria retornar 400<div class="error">status code: expected 500 to equal 400</div></td>
+              <td class="num">0.2 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Filtro de checkin deveria incluir a data informada (&gt;=)<div class="error">expected [] to include 3604</div></td>
+              <td class="num">0.4 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Filtro de checkout deveria retornar checkouts posteriores à data informada (&gt;=)<div class="error">expected [ Array(2447) ] to include 3624</div></td>
+              <td class="num">0.8 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Resposta XML deveria ter content-type application/xml<div class="error">content-type: expected &#39;text/html; charset=utf-8&#39; to include &#39;application/xml&#39;</div></td>
+              <td class="num">0.4 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Atualização de reserva (PUT /booking/:id)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>[BUG] Atualizar reserva inexistente deveria retornar 404<div class="error">status code: expected 405 to equal 404</div></td>
+              <td class="num">0.6 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr></tbody>
+      </table><h3>Restful-Booker · Java 21 + Rest Assured + Cucumber</h3>
+      <h4>Autenticação - Criação de token (POST /auth)</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Validar contrato da resposta de sucesso</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Gerar token com credenciais válidas</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Validar headers da resposta de sucesso</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Gerar token ignorando campos adicionais no corpo</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Gerar token enviando credenciais como formulário</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Cada solicitação gera um token diferente</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Token gerado autoriza operação protegida</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Rejeitar corpo com JSON malformado</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Token inválido não autoriza operação protegida</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Credenciais inválidas deveriam retornar 401 Unauthorized<div class="error">[status code] expected: 401 but was: 200</div></td>
+              <td class="num">4.5 s</td>
+              
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr></tbody>
+      </table>
+      <h4>Exemplos</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>Example #1.3</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.3</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.3</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.13</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.2</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.1</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.12</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.4</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.4</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.11</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.10</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.9</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.8</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.7</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.5</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr><tr>
+              <td>Example #1.6</td>
+              <td class="num">0.0 s</td>
+              
+              <td><span class="badge skipped">ignorado</span></td>
+            </tr></tbody>
+      </table><h3>SauceDemo · Cypress + Cucumber</h3>
+      <h4>Checkout de compra no SauceDemo</h4>
+      <table class="compact">
+        <thead><tr><th>Cenário</th><th class="num">Tempo</th><th class="num">Prints</th><th>Resultado</th></tr></thead>
+        <tbody><tr>
+              <td>[BUG] Checkout não deveria ser permitido com o carrinho vazio<div class="error">Timed out retrying after 10000ms: expected &#39;&lt;button#checkout.btn.btn_action.btn_medium.checkout_button.&gt;&#39; to be &#39;disabled&#39;</div></td>
+              <td class="num">11.6 s</td>
+              <td class="num">1</td>
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Não deveria avançar no checkout com campos com apenas espaços<div class="error">Timed out retrying after 10000ms: expected &#39;/checkout-step-two.html&#39; to equal &#39;/checkout-step-one.html&#39;</div></td>
+              <td class="num">13.3 s</td>
+              <td class="num">1</td>
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] Não deveria avançar no checkout com CEP com caracteres especiais<div class="error">Timed out retrying after 10000ms: expected &#39;/checkout-step-two.html&#39; to equal &#39;/checkout-step-one.html&#39;</div></td>
+              <td class="num">14.2 s</td>
+              <td class="num">1</td>
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] problem_user deveria concluir uma compra com dados válidos<div class="error">Timed out retrying after 10000ms: expected &#39;&lt;input#first-name.input_error.form_input&gt;&#39; to have value &#39;Maria&#39;, but the value was &#39;a&#39;</div></td>
+              <td class="num">13.5 s</td>
+              <td class="num">1</td>
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr><tr>
+              <td>[BUG] error_user deveria concluir uma compra com dados válidos<div class="error">The following error originated from your application code, not from Cypress. &gt; Cannot read properties of undefined (reading &#39;value&#39;) When Cypress detects uncaught errors originating from your application it will automat…</div></td>
+              <td class="num">2.9 s</td>
+              <td class="num">1</td>
+              <td><span class="badge expected">falha esperada</span></td>
+            </tr></tbody>
+      </table>
+
+<h2>8. Mobile: cobertura atual e próximo passo</h2>
+<p>O estágio mobile executa a suíte E2E do SauceDemo emulando dispositivos reais no Playwright: <strong>Pixel 7</strong> (Android, Chrome)
+e <strong>iPhone 15</strong> (iOS, Safari/WebKit), com viewport, densidade de pixels, user agent e eventos de toque de cada aparelho.
+Isso cobre a experiência <strong>web mobile</strong>.</p>
+<div class="callout">O portfólio não tem um aplicativo nativo. Quando houver, o estágio mobile recebe um job com
+<strong>Appium</strong> (ou Maestro) em um emulador Android (<code>reactivecircus/android-emulator-runner</code>) e, para iOS, um runner
+<code>macos-latest</code> com simulador, ou um device farm (BrowserStack, Sauce Labs, AWS Device Farm). Ele entra na mesma matriz e
+publica os resultados como artefato <code>results-mobile-*</code>, que este relatório já consolida.</div>
+
+<h2>9. Artefatos da execução</h2>
+<table class="compact">
+  <thead><tr><th>Artefato</th><th>Conteúdo</th></tr></thead>
+  <tbody>
+    <tr><td><code>pipeline-report-&lt;n&gt;</code></td><td>Este relatório (HTML e PDF), o resumo em Markdown e os dados consolidados (JSON)</td></tr>
+    <tr><td><code>results-api-cypress</code></td><td>Relatório Cucumber HTML com request/response anexados</td></tr>
+    <tr><td><code>results-api-rest-assured</code></td><td>Relatório Allure, Cucumber HTML e JUnit (Surefire)</td></tr>
+    <tr><td><code>results-e2e-cypress</code></td><td>Relatório Cucumber HTML com prints de cada validação</td></tr>
+    <tr><td><code>results-e2e-playwright-*</code>, <code>results-mobile-*</code></td><td>Relatório Playwright e Cucumber; trace, vídeo e print das falhas</td></tr>
+    <tr><td><code>results-performance-k6</code></td><td>Resumo HTML/JSON e dashboard do k6</td></tr>
+    <tr><td><code>results-known-bugs-*</code></td><td>Evidências das falhas esperadas</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

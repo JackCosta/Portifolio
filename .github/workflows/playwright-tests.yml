@@ -1,0 +1,78 @@
+name: Playwright (reutilizável)
+
+on:
+  workflow_call:
+    inputs:
+      layer:
+        description: Camada exibida no nome do job (E2E ou Mobile)
+        required: true
+        type: string
+      matrix:
+        description: 'Lista JSON de { "suite", "project", "browser", "label" }'
+        required: true
+        type: string
+      base-url:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    name: ${{ inputs.layer }} · ${{ matrix.label }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(inputs.matrix) }}
+    defaults:
+      run:
+        working-directory: Front-PlayWright
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node-project
+        with:
+          working-directory: Front-PlayWright
+
+      - name: Cache dos navegadores do Playwright
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('Front-PlayWright/package-lock.json') }}
+
+      - name: Instalar navegador
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps "$BROWSER"
+        env:
+          BROWSER: ${{ matrix.browser }}
+
+      - name: Instalar dependências do sistema
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps "$BROWSER"
+        env:
+          BROWSER: ${{ matrix.browser }}
+
+      - run: npx bddgen
+
+      - name: Executar testes (${{ matrix.label }})
+        run: npx playwright test --project="$PROJECT"
+        env:
+          PROJECT: ${{ matrix.project }}
+          BASE_URL: ${{ inputs.base-url }}
+          LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME || 'standard_user' }}
+          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD || 'secret_sauce' }}
+
+      - name: Publicar resultados e evidências
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.suite }}
+          path: |
+            Front-PlayWright/reports/
+            Front-PlayWright/test-results/
+          if-no-files-found: warn
+          retention-days: 14

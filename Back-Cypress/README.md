@@ -3,7 +3,6 @@
 Testes automatizados da API [Restful Booker](https://restful-booker.herokuapp.com) escritos em **Cypress**, com
 **BDD (Cucumber/Gherkin em português)** e **Page Objects**.
 
-
 ## Stack
 
 | Ferramenta                              | Uso                                                 |
@@ -61,7 +60,6 @@ Testes automatizados da API [Restful Booker](https://restful-booker.herokuapp.co
 - **Page Objects:** concentram URL, método e headers de cada endpoint. Toda requisição feita por eles é anexada
   ao relatório, com headers sensíveis mascarados.
 - **Massa de dados:** cada cenário cria a própria reserva com nomes únicos. O hook `After` remove o que foi criado.
-
 
 ### Defeitos encontrados na API (`@bug`)
 

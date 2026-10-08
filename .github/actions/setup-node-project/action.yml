@@ -1,0 +1,32 @@
+name: Preparar projeto Node
+description: Instala o Node com cache do npm, restaura o binário do Cypress (opcional) e roda npm ci.
+
+inputs:
+  working-directory:
+    description: Pasta do projeto (onde fica o package-lock.json)
+    required: true
+  cypress-cache:
+    description: Restaurar o cache do binário do Cypress
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION || 22 }}
+        cache: npm
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+    - name: Cache do binário do Cypress
+      if: inputs.cypress-cache == 'true'
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/Cypress
+        key: cypress-${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', inputs.working-directory)) }}
+
+    - name: Instalar dependências
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
